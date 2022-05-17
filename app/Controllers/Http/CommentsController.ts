@@ -6,7 +6,7 @@ export default class CommentsController {
   public async index({}: HttpContextContract) {
     return await Comment.all()
   }
-
+  //scscvsdcscfsfc
   public async store({ response, request, auth }: HttpContextContract) {
     try {
       const userId = auth.user?.id
