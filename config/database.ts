@@ -8,8 +8,7 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 import Url from 'url-parse'
-const DATABASE_URL =
-  'postgres://fjnricqouzamcn:1819a2a8855f0eef4574f74d427049890691e8bdcdf31b6fc6b1e0a194072fb7@ec2-54-86-224-85.compute-1.amazonaws.com:5432/d5ngsccmppkapr'
+const DATABASE_URL = new Url(Env.get('DATABASE_URL'))
 const databaseConfig: DatabaseConfig = {
   /*
   |--------------------------------------------------------------------------
