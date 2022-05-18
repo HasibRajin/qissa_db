@@ -9,7 +9,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 import Url from 'url-parse'
 const DATABASE_URL = new Url(Env.get('DATABASE_URL'))
-console.log('urlCheck:' + DATABASE_URL.host)
+console.log(('urlCheck:' + DATABASE_URL.pathname.substr(1)) as string)
 const databaseConfig: DatabaseConfig = {
   /*
   |--------------------------------------------------------------------------
