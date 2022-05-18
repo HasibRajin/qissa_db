@@ -45,7 +45,7 @@ const databaseConfig: DatabaseConfig = {
     pg: {
       client: 'pg',
       connection: {
-        host: DATABASE_URL.host as string,
+        host: 'ec2-54-165-184-219.compute-1.amazonaws.com',
         port: DATABASE_URL.port as number,
         user: DATABASE_URL.username as string,
         password: DATABASE_URL.password as string,
