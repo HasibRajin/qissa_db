@@ -58,7 +58,6 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
 const databaseConfig: DatabaseConfig = {
@@ -89,11 +88,11 @@ const databaseConfig: DatabaseConfig = {
     pg: {
       client: 'pg',
       connection: {
-        host: Env.get('PG_HOST'),
-        port: Env.get('PG_PORT'),
-        user: Env.get('PG_USER'),
-        password: Env.get('PG_PASSWORD', ''),
-        database: Env.get('PG_DB_NAME'),
+        host: 'ec2-54-165-184-219.compute-1.amazonaws.com',
+        port: 5432,
+        user: 'pcmyijeseroese',
+        password: 'adbd72c93a2fa2c8c0f658e7696739365c695293773a55caeeaad59a5e7e6f05',
+        database: 'd6bad8db3pmqcv',
       },
       migrations: {
         naturalSort: true,

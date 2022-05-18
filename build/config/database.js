@@ -1,20 +1,16 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Env_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Env"));
 const databaseConfig = {
-    connection: Env_1.default.get('DB_CONNECTION'),
+    connection: 'pg',
     connections: {
         pg: {
             client: 'pg',
             connection: {
-                host: Env_1.default.get('PG_HOST'),
-                port: Env_1.default.get('PG_PORT'),
-                user: Env_1.default.get('PG_USER'),
-                password: Env_1.default.get('PG_PASSWORD', ''),
-                database: Env_1.default.get('PG_DB_NAME'),
+                host: 'ec2-54-165-184-219.compute-1.amazonaws.com',
+                port: 5432,
+                user: 'pcmyijeseroese',
+                password: 'adbd72c93a2fa2c8c0f658e7696739365c695293773a55caeeaad59a5e7e6f05',
+                database: 'd6bad8db3pmqcv',
             },
             migrations: {
                 naturalSort: true,
