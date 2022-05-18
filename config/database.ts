@@ -9,7 +9,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 import Url from 'url-parse'
 const DATABASE_URL = new Url(Env.get('DATABASE_URL'))
-const hostid = DATABASE_URL.host as string
+const host = DATABASE_URL.host as string
 const port = DATABASE_URL.port as number
 const user = DATABASE_URL.username as string
 const password = DATABASE_URL.password as string
@@ -45,7 +45,7 @@ const databaseConfig: DatabaseConfig = {
     pg: {
       client: 'pg',
       connection: {
-        host: hostid.substr(hostid.length - 4),
+        host: DATABASE_URL.host.split(':')[0] as string,
         port: DATABASE_URL.port as number,
         user: DATABASE_URL.username as string,
         password: DATABASE_URL.password as string,
