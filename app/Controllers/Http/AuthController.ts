@@ -51,9 +51,6 @@ export default class AuthController {
     }
   }
 
-  // public async show({request, response,params:{id}}: HttpContextContract) {
-  //
-  // }
   public async login({ request, response, auth }: HttpContextContract) {
     try {
       const requestData = await request.validate(Login)
