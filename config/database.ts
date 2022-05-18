@@ -72,7 +72,7 @@ const databaseConfig: DatabaseConfig = {
   | file.
   |
   */
-  connection: Env.get('DB_CONNECTION'),
+  connection: 'pg',
 
   connections: {
     /*
