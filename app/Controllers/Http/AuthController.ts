@@ -6,7 +6,6 @@ import Login from 'App/Validators/Auth/LoginUserRequest'
 
 export default class AuthController {
   public async index({ response }: HttpContextContract) {
-    //dsvsv
     try {
       const users = await User.query()
         .preload('profile')
