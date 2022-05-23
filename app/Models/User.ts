@@ -12,6 +12,9 @@ import {
 import Profile from 'App/Models/Profile'
 import Post from 'App/Models/Post'
 import Reaction from 'App/Models/Reaction'
+import Mail from '@ioc:Adonis/Addons/Mail'
+import Env from '@ioc:Adonis/Core/Env'
+import Route from '@ioc:Adonis/Core/Route'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -30,6 +33,9 @@ export default class User extends BaseModel {
   public profile_pic: string
 
   @column()
+  public is_active: boolean
+
+  @column()
   public follower_count: number
 
   @column({ serializeAs: null })
@@ -40,6 +46,23 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  public async sendVerificationEmail() {
+    const appDomain = Env.get('APP_URL')
+    const appName = Env.get('APP_NAME')
+    const currentYear = new Date().getFullYear()
+    const url = Route.builder()
+      .params({ email: this.email })
+      .prefixUrl(appDomain)
+      .makeSigned('verifyEmail', { expiresIn: '24hours' })
+    await Mail.send((message) => {
+      message
+        .from(Env.get('DEFAULT_MAIL'))
+        .to(this.email)
+        .subject('Please verify your email')
+        .htmlView('emails/auth/verify', { user: this, url, appName, appDomain, currentYear })
+    })
+  }
 
   @beforeSave()
   public static async hashPassword(user: User) {

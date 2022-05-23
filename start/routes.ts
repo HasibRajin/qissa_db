@@ -27,8 +27,10 @@ Route.group(() => {
   Route.get('/user', 'AuthController.index')
   Route.post('/signup', 'AuthController.register')
   Route.post('/login', 'AuthController.login')
+  Route.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail')
 
   Route.get('/post', 'PostsController.index')
+  Route.get('/topics', 'TopicsController.index')
 }).prefix('api')
 
 Route.group(() => {
@@ -41,7 +43,7 @@ Route.group(() => {
   Route.resource('/reaction', 'ReactionsController').apiOnly().except(['update'])
   Route.resource('/relation', 'UserRelationsController').apiOnly().except(['update'])
 
-  Route.resource('/topic', 'TopicsController').apiOnly()
+  Route.resource('/topic', 'TopicsController').apiOnly().except(['index'])
 })
 
   .prefix('api')

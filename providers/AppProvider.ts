@@ -23,6 +23,13 @@ export default class AppProvider {
       this.status(status).json(response)
       return this
     })
+
+    const { PostMarkDriver } = await import('./PostMarkDriver')
+    const Mail = this.app.container.use('Adonis/Addons/Mail')
+
+    Mail.extend('postmark', (_mail, _mapping, config) => {
+      return new PostMarkDriver(config)
+    })
   }
 
   public async ready() {
