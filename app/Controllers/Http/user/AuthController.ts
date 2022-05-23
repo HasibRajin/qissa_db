@@ -24,8 +24,6 @@ export default class AuthController {
     }
   }
 
-  // public async create({}: HttpContextContract) {}
-
   public async register({ request, response, auth }: HttpContextContract) {
     try {
       const userData = await request.validate(CreateUser)
