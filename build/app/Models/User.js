@@ -18,7 +18,27 @@ const Orm_1 = global[Symbol.for('ioc.use')]("Adonis/Lucid/Orm");
 const Profile_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/Profile"));
 const Post_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/Post"));
 const Reaction_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/Reaction"));
+const Mail_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Addons/Mail"));
+const Env_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Env"));
+const Route_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Route"));
 class User extends Orm_1.BaseModel {
+    async sendVerificationEmail() {
+        const appDomain = Env_1.default.get('APP_URL');
+        const appName = Env_1.default.get('APP_NAME');
+        const currentYear = new Date().getFullYear();
+        const url = Route_1.default.builder()
+            .params({ email: this.email })
+            .prefixUrl(appDomain)
+            .makeSigned('verifyEmail', { expiresIn: '24hours' });
+        await Mail_1.default.send((message) => {
+            message
+                .from(Env_1.default.get('DEFAULT_MAIL'))
+                .to(this.email)
+                .subject('Please verify your email')
+                .text('1234')
+                .htmlView('emails/auth/verify', { user: this, url, appName, appDomain, currentYear });
+        });
+    }
     static async hashPassword(user) {
         if (user.$dirty.password) {
             user.password = await Hash_1.default.make(user.password);
@@ -45,6 +65,10 @@ __decorate([
     (0, Orm_1.column)(),
     __metadata("design:type", String)
 ], User.prototype, "profile_pic", void 0);
+__decorate([
+    (0, Orm_1.column)(),
+    __metadata("design:type", Boolean)
+], User.prototype, "is_active", void 0);
 __decorate([
     (0, Orm_1.column)(),
     __metadata("design:type", Number)

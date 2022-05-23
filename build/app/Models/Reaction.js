@@ -30,6 +30,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Reaction.prototype, "post_id", void 0);
 __decorate([
+    (0, Orm_1.column)(),
+    __metadata("design:type", String)
+], Reaction.prototype, "reaction_type", void 0);
+__decorate([
     Orm_1.column.dateTime({ autoCreate: true }),
     __metadata("design:type", luxon_1.DateTime)
 ], Reaction.prototype, "createdAt", void 0);

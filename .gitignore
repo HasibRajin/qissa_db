@@ -1,6 +1,5 @@
 node_modules
 coverage
-build
 .vscode
 .DS_STORE
 .env

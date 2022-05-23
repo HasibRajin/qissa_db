@@ -27,6 +27,7 @@ class Reactions extends Schema_1.default {
                 .onDelete('CASCADE')
                 .notNullable();
             table.unique(['user_id', 'post_id']);
+            table.enum('reaction_type', ['like', 'love']);
             table.timestamp('created_at', { useTz: true });
             table.timestamp('updated_at', { useTz: true });
         });

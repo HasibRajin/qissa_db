@@ -16,6 +16,7 @@ class UsersSchema extends Schema_1.default {
             table.string('email', 100).notNullable();
             table.string('password', 100).notNullable();
             table.string('profile_pic');
+            table.boolean('is_active');
             table.integer('follower_count');
             table.string('remember_me_token').nullable();
             table.timestamp('created_at', { useTz: true }).notNullable();

@@ -19,10 +19,12 @@ class ReactionsController {
         try {
             const user = auth.user;
             const postId = request.qs().post_id;
+            const reactionType = request.qs().reaction_type;
             const post = await Post_1.default.query().where({ id: postId }).first();
             const like = await Reaction_1.default.create({
                 user_id: user?.id,
                 post_id: post?.id,
+                reaction_type: reactionType,
             });
             if (like) {
                 await Post_1.default.query().where({ id: postId }).increment('like', 1);

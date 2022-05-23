@@ -32,15 +32,17 @@ class AuthController {
                 name: userData.name,
                 email: userData.email,
                 password: userData.password,
+                is_active: false,
                 follower_count: 0,
             });
+            user?.sendVerificationEmail();
             const token = await auth.use('api').generate(user);
             await user.related('profile').create({ user_id: user.id });
             return response.json({
                 success: true,
-                message: 'user creation success',
-                token: token,
-                user: user,
+                message: 'Registration successful, check your email inbox for a verification email',
+                token,
+                user,
             });
         }
         catch (e) {

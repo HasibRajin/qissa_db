@@ -4,14 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Route_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Route"));
-Route_1.default.get('/', async () => {
-    return { hello: 'world' };
+Route_1.default.get('/', async ({ view }) => {
+    return view.render('home');
 });
 Route_1.default.group(() => {
-    Route_1.default.get('/user', 'AuthController.index');
-    Route_1.default.post('/signup', 'AuthController.register');
-    Route_1.default.post('/login', 'AuthController.login');
+    Route_1.default.get('/user', 'user/AuthController.index');
+    Route_1.default.post('/signup', 'user/AuthController.register');
+    Route_1.default.post('/login', 'user/AuthController.login');
+    Route_1.default.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail');
     Route_1.default.get('/post', 'PostsController.index');
+    Route_1.default.get('/topics', 'TopicsController.index');
 }).prefix('api');
 Route_1.default.group(() => {
     Route_1.default.post('/logout', 'AuthController.logout');
@@ -20,7 +22,7 @@ Route_1.default.group(() => {
     Route_1.default.resource('/post', 'PostsController').apiOnly().except(['index']);
     Route_1.default.resource('/reaction', 'ReactionsController').apiOnly().except(['update']);
     Route_1.default.resource('/relation', 'UserRelationsController').apiOnly().except(['update']);
-    Route_1.default.resource('/topic', 'TopicsController').apiOnly();
+    Route_1.default.resource('/topic', 'TopicsController').apiOnly().except(['index']);
 })
     .prefix('api')
     .middleware('auth');
