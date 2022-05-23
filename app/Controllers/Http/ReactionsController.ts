@@ -16,11 +16,13 @@ export default class ReactionsController {
     try {
       const user = auth.user
       const postId = request.qs().post_id
+      const reactionType = request.qs().reaction_type
       const post = await Post.query().where({ id: postId }).first()
 
       const like = await Reaction.create({
         user_id: user?.id,
         post_id: post?.id,
+        reaction_type: reactionType,
       })
       if (like) {
         await Post.query().where({ id: postId }).increment('like', 1)

@@ -9,6 +9,9 @@ export default class Reaction extends BaseModel {
   public user_id: number
   @column()
   public post_id: number
+
+  @column()
+  public reaction_type: string
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
