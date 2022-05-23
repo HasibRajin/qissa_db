@@ -36,6 +36,9 @@ export default class AuthController {
         is_active: false,
         follower_count: 0,
       })
+      // await Mail.send((message) => {
+      //   message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('tyhtyhythn')
+      // })
       user?.sendVerificationEmail()
       const token = await auth.use('api').generate(user)
       await user.related('profile').create({ user_id: user.id })

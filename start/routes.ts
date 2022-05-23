@@ -20,13 +20,13 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+Route.get('/', async ({ view }) => {
+  return view.render('home')
 })
 Route.group(() => {
-  Route.get('/user', 'AuthController.index')
-  Route.post('/signup', 'AuthController.register')
-  Route.post('/login', 'AuthController.login')
+  Route.get('/user', 'user/AuthController.index')
+  Route.post('/signup', 'user/AuthController.register')
+  Route.post('/login', 'user/AuthController.login')
   Route.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail')
 
   Route.get('/post', 'PostsController.index')
