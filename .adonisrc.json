@@ -16,7 +16,15 @@
   },
   "preloads": [
     "./start/routes",
-    "./start/kernel"
+    "./start/kernel",
+    {
+      "file": "./start/events",
+      "environment": [
+        "console",
+        "repl",
+        "web"
+      ]
+    }
   ],
   "providers": [
     "./providers/AppProvider",
@@ -24,7 +32,8 @@
     "@adonisjs/lucid",
     "@adonisjs/auth",
     "@adonisjs/mail",
-    "@adonisjs/view"
+    "@adonisjs/view",
+    "@adonisjs/ally"
   ],
   "aceProviders": [
     "@adonisjs/repl"

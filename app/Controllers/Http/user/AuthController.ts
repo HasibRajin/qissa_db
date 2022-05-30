@@ -38,6 +38,7 @@ export default class AuthController {
       //   message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('tyhtyhythn')
       // })
       user?.sendVerificationEmail()
+      await auth.use('api').revoke()
       const token = await auth.use('api').generate(user)
       await user.related('profile').create({ user_id: user.id })
       return response.json({
