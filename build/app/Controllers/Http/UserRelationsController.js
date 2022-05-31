@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/User"));
 const UserRelation_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/UserRelation"));
 const StoreUserRelationRequest_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Validators/StoreUserRelationRequest"));
-const Database_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 class UserRelationsController {
     async index({ request, response, auth }) {
         try {
@@ -17,11 +16,10 @@ class UserRelationsController {
                 return response.withError('invalid relatable_type');
             }
             else if (data === 'follower') {
-                const follower = await Database_1.default.from('user_relations')
+                const follower = await UserRelation_1.default.query()
+                    .preload('follower')
                     .where({ user_id: relatableId })
-                    .andWhere({ relatable_type: 'follow' })
-                    .join('users', 'user_relations.relatable_id', '=', 'users.id')
-                    .select('user_relations.*', 'users.profile_pic', 'users.name');
+                    .andWhere({ relatable_type: 'follow' });
                 return response.withSuccess(`found ${follower.length} followers`, follower);
             }
             const relationData = await UserRelation_1.default.query()
@@ -67,6 +65,7 @@ class UserRelationsController {
         try {
             const relatableID = auth.user?.id;
             const relationData = await UserRelation_1.default.query()
+                .preload('user')
                 .where({ user_id: id })
                 .andWhere({ relatable_id: relatableID })
                 .first();

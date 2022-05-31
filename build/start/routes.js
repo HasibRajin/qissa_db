@@ -7,6 +7,11 @@ const Route_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Route
 Route_1.default.get('/', async ({ view }) => {
     return view.render('home');
 });
+Route_1.default.get('/privacy', async ({ view }) => {
+    return view.render('privacypolicy');
+});
+Route_1.default.get('/callback/:drive', 'user/SocialLoginController.callback');
+Route_1.default.get('/redirect/:drive', 'user/SocialLoginController.index');
 Route_1.default.group(() => {
     Route_1.default.get('/user', 'user/AuthController.index');
     Route_1.default.post('/signup', 'user/AuthController.register');
@@ -17,7 +22,8 @@ Route_1.default.group(() => {
 }).prefix('api');
 Route_1.default.group(() => {
     Route_1.default.post('/logout', 'AuthController.logout');
-    Route_1.default.put('/profile', 'ProfilesController.update');
+    Route_1.default.get('/profile', 'user/ProfilesController.index');
+    Route_1.default.put('/profile', 'user/ProfilesController.update');
     Route_1.default.resource('/comment', 'CommentsController').apiOnly();
     Route_1.default.resource('/post', 'PostsController').apiOnly().except(['index']);
     Route_1.default.resource('/reaction', 'ReactionsController').apiOnly().except(['update']);

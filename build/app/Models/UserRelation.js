@@ -47,5 +47,12 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], UserRelation.prototype, "user", void 0);
+__decorate([
+    (0, Orm_1.hasMany)(() => User_1.default, {
+        foreignKey: 'id',
+        localKey: 'relatable_id',
+    }),
+    __metadata("design:type", Object)
+], UserRelation.prototype, "follower", void 0);
 exports.default = UserRelation;
 //# sourceMappingURL=UserRelation.js.map

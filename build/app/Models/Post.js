@@ -41,7 +41,7 @@ __decorate([
 __decorate([
     (0, Orm_1.column)(),
     __metadata("design:type", Number)
-], Post.prototype, "like", void 0);
+], Post.prototype, "like_count", void 0);
 __decorate([
     (0, Orm_1.column)(),
     __metadata("design:type", String)

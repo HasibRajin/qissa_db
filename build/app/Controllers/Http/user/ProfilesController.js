@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Profile_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/Profile"));
 const User_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/User"));
 class ProfilesController {
-    async index({ response }) {
+    async index({ response, auth }) {
         try {
-            const profiles = await Profile_1.default.all();
+            const profiles = await Profile_1.default.query().where({ user_id: auth.user?.id });
             return response.json({
                 success: true,
-                message: `Found ${profiles.length} users`,
+                message: `Found  users`,
                 profiles: profiles,
             });
         }

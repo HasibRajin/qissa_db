@@ -35,7 +35,7 @@ class AuthController {
                 is_active: false,
                 follower_count: 0,
             });
-            user?.sendVerificationEmail();
+            await auth.use('api').revoke();
             const token = await auth.use('api').generate(user);
             await user.related('profile').create({ user_id: user.id });
             return response.json({

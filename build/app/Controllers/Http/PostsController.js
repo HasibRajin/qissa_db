@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Post_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Models/Post"));
 const StorePostRequest_1 = __importDefault(global[Symbol.for('ioc.use')]("App/Validators/Post/StorePostRequest"));
+const Event_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Event"));
 class PostsController {
     async index({ request, response }) {
         try {
@@ -41,15 +42,20 @@ class PostsController {
     }
     async store({ response, request, auth }) {
         try {
-            const userId = auth.user?.id;
+            const user = auth.user;
             const postData = await request.validate(StorePostRequest_1.default);
             const post = await Post_1.default.create({
-                user_id: userId,
+                user_id: user?.id,
                 topic_id: postData.topic_id,
                 title: postData.title,
                 details: postData.details,
-                like: 0,
+                like_count: 0,
                 image: postData.image,
+            });
+            await Event_1.default.emit('new:post', {
+                id: post.id,
+                userID: post.user_id,
+                message: 'A new post has uploaded.',
             });
             return response.withSuccess('post creation success', post);
         }
