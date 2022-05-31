@@ -2,7 +2,6 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import UserRelation from 'App/Models/UserRelation'
 import CreateRelation from 'App/Validators/StoreUserRelationRequest'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class UserRelationsController {
   public async index({ request, response, auth }: HttpContextContract) {
@@ -13,12 +12,15 @@ export default class UserRelationsController {
       if (!re.test(data)) {
         return response.withError('invalid relatable_type')
       } else if (data === 'follower') {
-        const follower = await Database.from('user_relations')
+        // const follower = await Database.from('user_relations')
+        //   .where({ user_id: relatableId })
+        //   .andWhere({ relatable_type: 'follow' })
+        //   .join('users', 'user_relations.relatable_id', '=', 'users.id')
+        //   .select('user_relations.*', 'users.profile_pic', 'users.name')
+        const follower = await UserRelation.query()
+          .preload('follower')
           .where({ user_id: relatableId })
           .andWhere({ relatable_type: 'follow' })
-          .join('users', 'user_relations.relatable_id', '=', 'users.id')
-          .select('user_relations.*', 'users.profile_pic', 'users.name')
-
         return response.withSuccess(`found ${follower.length} followers`, follower)
       }
       const relationData = await UserRelation.query()
@@ -68,6 +70,7 @@ export default class UserRelationsController {
     try {
       const relatableID = auth.user?.id
       const relationData = await UserRelation.query()
+        .preload('user')
         .where({ user_id: id })
         .andWhere({ relatable_id: relatableID })
         .first()

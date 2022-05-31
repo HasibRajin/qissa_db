@@ -17,7 +17,7 @@ export default class Post extends BaseModel {
   public details: string
 
   @column()
-  public like: number
+  public like_count: number
 
   @column()
   public image: string

@@ -44,22 +44,8 @@ export default class SocialLoginController {
        * Finally, access the user
        */
       const driveUser = await driveName.user()
-      if (driveUser.email === null) {
-        const user = await User.firstOrCreate(
-          {
-            email: driveUser.name,
-          },
-          {
-            name: driveUser.name,
-            password: faker.internet.password(5),
-            is_active: true,
-            // @ts-ignore
-            profile_pic: driveUser.avatarUrl,
-          }
-        )
-        const token = await auth.use('api').generate(user)
-
-        return response.withSuccess('user login success', { user, token })
+      if (!driveUser.email) {
+        return response.withError("login failed. We couldn't find any email attach to your account")
       }
       const user = await User.firstOrCreate(
         {
@@ -68,7 +54,7 @@ export default class SocialLoginController {
         },
         {
           name: driveUser.name,
-          password: faker.internet.password(5),
+          password: faker.internet.password(8),
           rememberMeToken: driveUser.token.token,
           is_active: true,
           // @ts-ignore

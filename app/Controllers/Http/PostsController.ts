@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Post from 'App/Models/Post'
 import CreatePost from 'App/Validators/Post/StorePostRequest'
+import Event from '@ioc:Adonis/Core/Event'
 
 export default class PostsController {
   public async index({ request, response }: HttpContextContract) {
@@ -38,16 +39,21 @@ export default class PostsController {
 
   public async store({ response, request, auth }: HttpContextContract) {
     try {
-      const userId = auth.user?.id
+      const user = auth.user
       const postData = await request.validate(CreatePost)
 
       const post = await Post.create({
-        user_id: userId,
+        user_id: user?.id,
         topic_id: postData.topic_id,
         title: postData.title,
         details: postData.details,
-        like: 0,
+        like_count: 0,
         image: postData.image,
+      })
+      await Event.emit('new:post', {
+        id: post.id,
+        userID: post.user_id,
+        message: 'A new post has uploaded.',
       })
       return response.withSuccess('post creation success', post)
     } catch (e) {

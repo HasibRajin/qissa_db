@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 
 export default class UserRelation extends BaseModel {
@@ -21,7 +21,20 @@ export default class UserRelation extends BaseModel {
   public updatedAt: DateTime
 
   @belongsTo(() => User, {
-    foreignKey: 'user_id', // user_id column on "Reaction" model
+    foreignKey: 'user_id',
   })
   public user: BelongsTo<typeof User>
+  @hasMany(() => User, {
+    foreignKey: 'id',
+    localKey: 'relatable_id', // user_id column on "Post" model
+  })
+  public follower: HasMany<typeof User>
+
+  // @manyToMany(() => User, {
+  //   localKey: 'id',
+  //   pivotForeignKey: 'user_id',
+  //   relatedKey: 'id',
+  //   pivotRelatedForeignKey: 'relatable_id',
+  // })
+  // public user: ManyToMany<typeof User>
 }

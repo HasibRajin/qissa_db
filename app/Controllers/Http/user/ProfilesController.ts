@@ -3,12 +3,12 @@ import Profile from 'App/Models/Profile'
 import User from 'App/Models/User'
 
 export default class ProfilesController {
-  public async index({ response }: HttpContextContract) {
+  public async index({ response, auth }: HttpContextContract) {
     try {
-      const profiles = await Profile.all()
+      const profiles = await Profile.query().where({ user_id: auth.user?.id })
       return response.json({
         success: true,
-        message: `Found ${profiles.length} users`,
+        message: `Found  users`,
         profiles: profiles,
       })
     } catch (e) {
