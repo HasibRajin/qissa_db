@@ -37,7 +37,6 @@ export default class AuthController {
       // await Mail.send((message) => {
       //   message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('tyhtyhythn')
       // })
-
       // user?.sendVerificationEmail()
       // await Event.emit('new:user', { id: user.id, email: user.email, name: user.name })
       await auth.use('api').revoke()
