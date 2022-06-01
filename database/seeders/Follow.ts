@@ -35,11 +35,6 @@ export default class FollowSeeder extends BaseSeeder {
         relatable_type: 'follow',
       },
       {
-        user_id: 1,
-        relatable_id: 2,
-        relatable_type: 'follow',
-      },
-      {
         user_id: 2,
         relatable_id: 1,
         relatable_type: 'follow',
