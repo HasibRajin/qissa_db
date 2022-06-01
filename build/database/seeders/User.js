@@ -7,7 +7,7 @@ const Seeder_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/See
 const factories_1 = global[Symbol.for('ioc.use')]("Database/factories");
 class UserSeeder extends Seeder_1.default {
     async run() {
-        await factories_1.UserFactory.createMany(10);
+        await factories_1.UserFactory.createMany(20);
     }
 }
 exports.default = UserSeeder;

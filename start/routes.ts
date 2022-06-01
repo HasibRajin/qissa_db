@@ -23,9 +23,7 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.get('/', async ({ view }) => {
   return view.render('home')
 })
-Route.get('/privacy', async ({ view }) => {
-  return view.render('privacypolicy')
-})
+
 Route.get('/callback/:drive', 'user/SocialLoginController.callback')
 Route.get('/redirect/:drive', 'user/SocialLoginController.index')
 
@@ -55,3 +53,7 @@ Route.group(() => {
 
   .prefix('api')
   .middleware('auth')
+
+Route.get('/privacy', async ({ view }) => {
+  return view.render('privacypolicy')
+})

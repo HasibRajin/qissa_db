@@ -6,9 +6,9 @@ class StorePostRequest {
         this.ctx = ctx;
         this.schema = Validator_1.schema.create({
             topic_id: Validator_1.schema.number(),
-            title: Validator_1.schema.string(),
+            title: Validator_1.schema.string.optional(),
             details: Validator_1.schema.string(),
-            image: Validator_1.schema.string(),
+            image: Validator_1.schema.string.optional(),
         });
         this.cacheKey = this.ctx.routeKey;
         this.messages = {

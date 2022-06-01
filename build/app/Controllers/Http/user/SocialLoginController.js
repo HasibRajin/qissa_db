@@ -45,6 +45,7 @@ class SocialLoginController {
                 profile_pic: driveUser.avatarUrl,
             });
             const token = await auth.use('api').generate(user);
+            await user.related('profile').create({ user_id: user.id });
             return response.withSuccess('user login success', { user, token });
         }
         catch (e) {

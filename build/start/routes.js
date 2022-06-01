@@ -7,9 +7,6 @@ const Route_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Route
 Route_1.default.get('/', async ({ view }) => {
     return view.render('home');
 });
-Route_1.default.get('/privacy', async ({ view }) => {
-    return view.render('privacypolicy');
-});
 Route_1.default.get('/callback/:drive', 'user/SocialLoginController.callback');
 Route_1.default.get('/redirect/:drive', 'user/SocialLoginController.index');
 Route_1.default.group(() => {
@@ -32,4 +29,7 @@ Route_1.default.group(() => {
 })
     .prefix('api')
     .middleware('auth');
+Route_1.default.get('/privacy', async ({ view }) => {
+    return view.render('privacypolicy');
+});
 //# sourceMappingURL=routes.js.map

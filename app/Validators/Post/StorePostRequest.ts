@@ -25,9 +25,9 @@ export default class StorePostRequest {
    */
   public schema = schema.create({
     topic_id: schema.number(),
-    title: schema.string(),
+    title: schema.string.optional(),
     details: schema.string(),
-    image: schema.string(),
+    image: schema.string.optional(),
   })
   public cacheKey = this.ctx.routeKey
 
