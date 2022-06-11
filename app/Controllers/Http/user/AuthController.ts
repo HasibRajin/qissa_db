@@ -7,16 +7,15 @@ import Login from 'App/Validators/Auth/LoginUserRequest'
 export default class AuthController {
   public async index({ response }: HttpContextContract) {
     try {
-      const users = await User.query()
-        .preload('profile')
-        .preload('posts', (postsQuery) => {
-          postsQuery.preload('comments', (commentsQuery) => {
-            commentsQuery.preload('user')
-          }),
-            postsQuery.preload('reactions', (likesQuery) => {
-              likesQuery.preload('user')
-            })
-        })
+      const users = await User.query().preload('profile')
+      // .preload('posts', (postsQuery) => {
+      //   postsQuery.preload('comments', (commentsQuery) => {
+      //     commentsQuery.preload('user')
+      //   }),
+      //     postsQuery.preload('reactions', (likesQuery) => {
+      //       likesQuery.preload('user')
+      //     })
+      // })
 
       return response.withSuccess(`Found ${users.length} users`, users)
     } catch (e) {
