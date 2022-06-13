@@ -66,10 +66,7 @@ export default class AuthController {
 
       const token = await auth.use('api').attempt(requestData.email, requestData.password)
       const user = await auth.user
-      return response.withSuccess(
-        'Registration successful, check your email inbox for a verification email',
-        { user, token }
-      )
+      return response.withSuccess('login success', { user, token })
       // return response.json({
       //   success: true,
       //   message: 'user creation success',
