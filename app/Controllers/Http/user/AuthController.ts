@@ -31,6 +31,7 @@ export default class AuthController {
         email: userData.email,
         password: userData.password,
         is_active: false,
+        profile_pic: '',
         follower_count: 0,
       })
       // await Mail.send((message) => {
@@ -41,12 +42,16 @@ export default class AuthController {
       await auth.use('api').revoke()
       const token = await auth.use('api').generate(user)
       await user.related('profile').create({ user_id: user.id })
-      return response.json({
-        success: true,
-        message: 'Registration successful, check your email inbox for a verification email',
-        token,
-        user,
-      })
+      return response.withSuccess(
+        'Registration successful, check your email inbox for a verification email',
+        { user, token }
+      )
+      // return response.json({
+      //   success: true,
+      //   message: 'Registration successful, check your email inbox for a verification email',
+      //   token,
+      //   user,
+      // })
     } catch (e) {
       if (e.messages) {
         return response.withError(e.messages)
@@ -60,14 +65,17 @@ export default class AuthController {
       const requestData = await request.validate(Login)
 
       const token = await auth.use('api').attempt(requestData.email, requestData.password)
-      const userData = await auth.user
-
-      return response.json({
-        success: true,
-        message: 'user creation success',
-        token: token,
-        user: userData,
-      })
+      const user = await auth.user
+      return response.withSuccess(
+        'Registration successful, check your email inbox for a verification email',
+        { user, token }
+      )
+      // return response.json({
+      //   success: true,
+      //   message: 'user creation success',
+      //   token: token,
+      //   user: user,
+      // })
     } catch (e) {
       return response.withError(e.message)
     }
@@ -77,11 +85,7 @@ export default class AuthController {
     try {
       const user = auth.user?.name
       await auth.use('api').revoke()
-      return response.json({
-        success: true,
-        message: `${user} logout successfully`,
-        user,
-      })
+      return response.withSuccess('logout successfully', user)
     } catch (e) {
       return response.json({ success: false, message: e.message })
     }
