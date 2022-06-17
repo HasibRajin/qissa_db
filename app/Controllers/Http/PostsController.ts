@@ -12,7 +12,7 @@ export default class PostsController {
           .preload('reactions', (reactionQuery) => {
             reactionQuery.where('user_id', id)
           })
-          .preload('comments')
+          .withCount('comments')
           .orderBy([
             {
               column: 'created_at',
@@ -23,7 +23,7 @@ export default class PostsController {
         return response.withSuccess(`Found ${post.length} posts`, post)
       }
       const post = await Post.query()
-        .preload('comments')
+        .withCount('comments')
         .orderBy([
           {
             column: 'created_at',
@@ -67,12 +67,13 @@ export default class PostsController {
   public async show({ params: { id }, response, request }: HttpContextContract) {
     try {
       const likerId = request.qs().id
-      if (id) {
+      if (likerId) {
         const post = await Post.query()
           .where({ user_id: id })
           .preload('reactions', (reactionsQuery) => {
             reactionsQuery.where('user_id', likerId)
           })
+          .withCount('comments')
           .orderBy([
             {
               column: 'created_at',
@@ -84,6 +85,7 @@ export default class PostsController {
       }
       const post = await Post.query()
         .where({ user_id: id })
+        .withCount('comments')
         .orderBy([
           {
             column: 'created_at',
