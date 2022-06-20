@@ -16,7 +16,6 @@ export const PostFactory = Factory.define(Post, ({ faker }) => {
     user_id: 6,
     title: faker.lorem.sentence(4),
     details: faker.lorem.paragraphs(2),
-    like: 0,
   }
 }).build()
 export const FollowFactory = Factory.define(Follow, ({}) => {

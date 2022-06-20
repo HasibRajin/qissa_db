@@ -3,6 +3,6 @@ import { UserFactory } from 'Database/factories'
 
 export default class UserSeeder extends BaseSeeder {
   public async run() {
-    await UserFactory.createMany(20)
+    await UserFactory.createMany(50)
   }
 }
