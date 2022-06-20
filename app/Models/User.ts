@@ -15,6 +15,7 @@ import Reaction from 'App/Models/Reaction'
 import Mail from '@ioc:Adonis/Addons/Mail'
 import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
+import UserRelation from 'App/Models/UserRelation'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -34,9 +35,6 @@ export default class User extends BaseModel {
 
   @column()
   public is_active: boolean
-
-  @column()
-  public follower_count: number
 
   @column({ serializeAs: null })
   public rememberMeToken?: string
@@ -86,4 +84,9 @@ export default class User extends BaseModel {
     foreignKey: 'user_id', // user_id column on "Like" model
   })
   public reactions: HasMany<typeof Reaction>
+
+  @hasMany(() => UserRelation, {
+    foreignKey: 'relatable_id', // user_id column on "Like" model
+  })
+  public follower: HasMany<typeof UserRelation>
 }

@@ -37,5 +37,5 @@ export default class UpdateCommentRequest {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }

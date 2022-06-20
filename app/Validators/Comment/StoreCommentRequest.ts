@@ -41,5 +41,5 @@ export default class StoreCommentRequest {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }

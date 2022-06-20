@@ -31,8 +31,8 @@ export default class AuthController {
         email: userData.email,
         password: userData.password,
         is_active: false,
-        profile_pic: '',
-        follower_count: 0,
+        // @ts-ignore
+        profile_pic: null,
       })
       // await Mail.send((message) => {
       //   message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('tyhtyhythn')
@@ -53,9 +53,6 @@ export default class AuthController {
       //   user,
       // })
     } catch (e) {
-      if (e.messages) {
-        return response.withError(e.messages)
-      }
       return response.withError(e.message)
     }
   }
@@ -85,6 +82,24 @@ export default class AuthController {
       return response.withSuccess('logout successfully', user)
     } catch (e) {
       return response.json({ success: false, message: e.message })
+    }
+  }
+  public async show({ request, response, params: { id } }: HttpContextContract) {
+    try {
+      const followerId = request.qs().follower_id
+      if (followerId) {
+        const user = await User.query()
+          .where('id', id)
+          .preload('profile')
+          .preload('follower', (followerQuery) => {
+            followerQuery.where('user_id', followerId)
+          })
+        return response.withSuccess(`found user`, user)
+      }
+      const user = await User.query().where('id', id).preload('profile')
+      return response.withSuccess(`found user`, user)
+    } catch (e) {
+      return response.withError(e.message)
     }
   }
 

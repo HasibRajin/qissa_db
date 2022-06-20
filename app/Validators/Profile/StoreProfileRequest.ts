@@ -37,5 +37,5 @@ export default class StoreProfileRequest {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }

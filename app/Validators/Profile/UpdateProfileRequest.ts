@@ -37,5 +37,5 @@ export default class UpdateProfileRequest {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }

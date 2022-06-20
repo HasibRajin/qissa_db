@@ -38,34 +38,33 @@ export default class UserRelationsController {
       const relatableId = auth.user?.id
       const payload = await request.validate(CreateRelation)
       const user = await User.find(payload.user_id)
-      const hasRelation = await UserRelation.query()
-        .where({ user_id: payload.user_id })
-        .andWhere({ relatable_id: relatableId })
-        .first()
-      if (hasRelation && !(hasRelation.relatable_type === payload.relatable_type)) {
-        await hasRelation.delete()
-      }
       const userRelation = await UserRelation.create({
         user_id: user?.id,
         relatable_id: relatableId,
         relatable_type: payload.relatable_type,
       })
-      if (userRelation && payload.relatable_type === 'follow') {
-        await User.query().where({ id: user?.id }).increment('follower_count', 1)
-      }
 
       return response.withSuccess(
         `${auth.user?.name} successfully ${userRelation.relatable_type} ${user?.name}  `,
         userRelation
       )
     } catch (e) {
-      if (e.messages) {
-        return response.withError(e.messages)
-      }
       return response.withError(e.message)
     }
   }
-
+  public async update({ params: { id }, request, response, bouncer }: HttpContextContract) {
+    try {
+      const relationData = await UserRelation.findOrFail(id)
+      await bouncer.authorize('userRelation', relationData)
+      const relatableType = request.only(['relatable_type'])
+      relationData?.merge(relatableType)
+      const relation = await relationData?.save()
+      return response.withSuccess('update success', relation)
+    } catch (e) {
+      return response.withError(e.message)
+    }
+  }
+  // take user id as parameter and check the login user have any relation with the other user.
   public async show({ params: { id }, response, auth }: HttpContextContract) {
     try {
       const relatableID = auth.user?.id
@@ -80,26 +79,13 @@ export default class UserRelationsController {
     }
   }
 
-  public async destroy({ params: { id }, response, auth }: HttpContextContract) {
+  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
     try {
-      const relatableId = auth.user?.id
-      const relationData = await UserRelation.query().where({ id: id }).first()
+      const relationData = await UserRelation.findOrFail(id)
+      await bouncer.authorize('userRelation', relationData)
 
-      if (relationData?.relatable_id === relatableId) {
-        if (relationData?.relatable_type === 'follow') {
-          await User.query().where({ id: relationData.user_id }).decrement('follower_count', 1)
-        }
-        await relationData?.delete()
-
-        return response.withSuccess(
-          `${auth.user?.name} successfully un${relationData?.relatable_type} ${relationData?.user_id}`,
-          relationData
-        )
-      }
-      return response.json({
-        success: false,
-        message: `${auth.user?.name} doesn't have access to un${relationData?.relatable_type}.`,
-      })
+      await relationData?.delete()
+      return response.withSuccess(` successfully un${relationData?.relatable_type}`, relationData)
     } catch (e) {
       return response.withError(e.message)
     }

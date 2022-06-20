@@ -19,8 +19,38 @@ export default class TopicsController {
 
   public async show({ params: { id }, response, request }: HttpContextContract) {
     try {
+      const likerId = request.qs().liker_id
+      if (likerId) {
+        const post = await Post.query()
+          .where('topic_id', id)
+          .preload('user')
+          .preload('reactions', (reactionQuery) => {
+            reactionQuery.where('user_id', likerId)
+          })
+          .withCount('reactions', (query) => {
+            query.as('reaction_count')
+          })
+          .withCount('comments', (query) => {
+            query.as('comments_count')
+          })
+          .orderBy([
+            {
+              column: 'created_at',
+              order: 'desc',
+            },
+          ])
+          .paginate(request.qs().current_page, request.qs().limit)
+        return response.withSuccess(`Found ${post.length} posts`, post)
+      }
       const post = await Post.query()
-        .where({ topic_id: id })
+        .where('topic_id', id)
+        .preload('user')
+        .withCount('reactions', (query) => {
+          query.as('reaction_count')
+        })
+        .withCount('comments', (query) => {
+          query.as('comments_count')
+        })
         .orderBy([
           {
             column: 'created_at',
@@ -28,7 +58,7 @@ export default class TopicsController {
           },
         ])
         .paginate(request.qs().current_page, request.qs().limit)
-      return response.withSuccess(`Found ${post.length} post`, post)
+      return response.withSuccess(`Found ${post.length} posts`, post)
     } catch (e) {
       return response.withError(e.message)
     }

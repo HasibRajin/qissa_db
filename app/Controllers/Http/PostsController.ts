@@ -1,18 +1,23 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Post from 'App/Models/Post'
 import CreatePost from 'App/Validators/Post/StorePostRequest'
-import Event from '@ioc:Adonis/Core/Event'
 
 export default class PostsController {
   public async index({ request, response }: HttpContextContract) {
     try {
-      const id = request.qs().id
-      if (id) {
+      const likerId = request.qs().liker_id
+      if (likerId) {
         const post = await Post.query()
+          .preload('user')
           .preload('reactions', (reactionQuery) => {
-            reactionQuery.where('user_id', id)
+            reactionQuery.where('user_id', likerId)
           })
-          .withCount('comments')
+          .withCount('reactions', (query) => {
+            query.as('reaction_count')
+          })
+          .withCount('comments', (query) => {
+            query.as('comments_count')
+          })
           .orderBy([
             {
               column: 'created_at',
@@ -23,7 +28,13 @@ export default class PostsController {
         return response.withSuccess(`Found ${post.length} posts`, post)
       }
       const post = await Post.query()
-        .withCount('comments')
+        .preload('user')
+        .withCount('reactions', (query) => {
+          query.as('reaction_count')
+        })
+        .withCount('comments', (query) => {
+          query.as('comments_count')
+        })
         .orderBy([
           {
             column: 'created_at',
@@ -31,6 +42,10 @@ export default class PostsController {
           },
         ])
         .paginate(request.qs().current_page, request.qs().limit)
+
+      // post.forEach((post) => {
+      //   console.log(post)
+      // })
       return response.withSuccess(`Found ${post.length} posts`, post)
     } catch (e) {
       return response.withError(e.message)
@@ -47,14 +62,13 @@ export default class PostsController {
         topic_id: postData.topic_id,
         title: postData.title,
         details: postData.details,
-        like_count: 0,
         image: postData.image,
       })
-      await Event.emit('new:post', {
-        id: post.id,
-        userID: post.user_id,
-        message: 'A new post has uploaded.',
-      })
+      // await Event.emit('new:post', {
+      //   id: post.id,
+      //   userID: post.user_id,
+      //   message: 'A new post has uploaded.',
+      // })
       return response.withSuccess('post creation success', post)
     } catch (e) {
       if (e.messages) {
@@ -66,14 +80,19 @@ export default class PostsController {
 
   public async show({ params: { id }, response, request }: HttpContextContract) {
     try {
-      const likerId = request.qs().id
+      const likerId = request.qs().liker_id
       if (likerId) {
         const post = await Post.query()
           .where({ user_id: id })
           .preload('reactions', (reactionsQuery) => {
             reactionsQuery.where('user_id', likerId)
           })
-          .withCount('comments')
+          .withCount('reactions', (query) => {
+            query.as('reaction_count')
+          })
+          .withCount('comments', (query) => {
+            query.as('comments_count')
+          })
           .orderBy([
             {
               column: 'created_at',
@@ -85,7 +104,12 @@ export default class PostsController {
       }
       const post = await Post.query()
         .where({ user_id: id })
-        .withCount('comments')
+        .withCount('reactions', (query) => {
+          query.as('reaction_count')
+        })
+        .withCount('comments', (query) => {
+          query.as('comments_count')
+        })
         .orderBy([
           {
             column: 'created_at',
@@ -99,43 +123,27 @@ export default class PostsController {
     }
   }
 
-  public async update({ params: { id }, response, request, auth }: HttpContextContract) {
+  public async update({ params: { id }, response, request, bouncer }: HttpContextContract) {
     try {
-      const user = auth.user
+      const post = await Post.findOrFail(id)
+      await bouncer.authorize('userPost', post)
 
-      const post = await Post.query().where({ id: id }).first()
-      if (post?.user_id === user?.id) {
-        const postData = request.only(['title', 'details', 'image'])
-        post?.merge(postData)
-        const userPost = await post?.save()
+      const postData = request.only(['title', 'details', 'image'])
+      post?.merge(postData)
+      const userPost = await post?.save()
 
-        return response.withSuccess(`post of ${user?.name} is updated successfully`, userPost)
-      }
-      return response.json({
-        success: false,
-        message: `${user?.name} don't have access to update this post.`,
-      })
+      return response.withSuccess(`post is updated successfully`, userPost)
     } catch (e) {
       return response.withError(e.message)
     }
   }
 
-  public async destroy({ params: { id }, response, auth }: HttpContextContract) {
+  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
     try {
-      const user = auth.user
-
-      const post = await Post.query().where({ id: id }).first()
-      if (post?.user_id === user?.id) {
-        await post?.delete()
-        return response.withSuccess(
-          `post of ${user?.name} with ${post?.id} is deleted successfully`,
-          post
-        )
-      }
-      return response.json({
-        success: false,
-        message: `${user?.name} don't have access to delete this post.`,
-      })
+      const post = await Post.findOrFail(id)
+      await bouncer.authorize('userPost', post)
+      await post?.delete()
+      return response.withSuccess(`post is deleted successfully`, post)
     } catch (e) {
       return response.withError(e.message)
     }

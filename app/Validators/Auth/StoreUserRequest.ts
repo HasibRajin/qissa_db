@@ -35,7 +35,7 @@ export default class StoreUserRequest {
 
     email: schema.string({}, [rules.email(), rules.unique({ table: 'users', column: 'email' })]),
 
-    password: schema.string({}, [rules.confirmed('Confirm_password'), rules.minLength(5)]),
+    password: schema.string({}, [rules.confirmed('confirm_password'), rules.minLength(5)]),
   })
   /**
    * The `schema` first gets compiled to a reusable function and then that compiled
@@ -58,7 +58,7 @@ export default class StoreUserRequest {
    *
    */
 
-  public messages = {
+  public message = {
     'email': 'enter a valid email',
     'email.unique': 'email not available',
     'password.minLength': 'please. enter five digit password',

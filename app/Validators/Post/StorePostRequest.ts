@@ -42,7 +42,7 @@ export default class StorePostRequest {
    * }
    *
    */
-  public messages = {
+  public message = {
     title: 'enter a valid title',
     details: 'please. details',
   }

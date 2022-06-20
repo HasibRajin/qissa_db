@@ -10,7 +10,6 @@ export default class CommentsController {
   public async store({ response, request, auth }: HttpContextContract) {
     try {
       const userId = auth.user?.id
-
       const commentData = await request.validate(CreateComment)
       const comment = await Comment.create({
         user_id: userId,
@@ -35,41 +34,26 @@ export default class CommentsController {
     }
   }
 
-  public async update({ params: { id }, response, request, auth }: HttpContextContract) {
+  public async update({ params: { id }, response, request, bouncer }: HttpContextContract) {
     try {
-      const user = auth.user
-      const comment = await Comment.query().where({ id: id }).first()
-      if (comment?.user_id === user?.id) {
-        const commentData = request.only(['comment_text'])
-        await comment?.merge(commentData)
-        const userComment = await comment?.save()
-        return response.withSuccess(`comment of ${user?.name} is updated successfully`, userComment)
-      }
-      return response.json({
-        success: false,
-        message: `${user?.name} don't have access to update this post.`,
-      })
+      const comment = await Comment.findOrFail(id)
+      await bouncer.authorize('userComment', comment)
+      const commentData = request.only(['comment_text'])
+      comment?.merge(commentData)
+      const userComment = await comment?.save()
+      return response.withSuccess(`comment is updated successfully`, userComment)
     } catch (e) {
       return response.withError(e.message)
     }
   }
 
-  public async destroy({ params: { id }, response, auth }: HttpContextContract) {
+  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
     try {
-      const user = auth.user
+      const comment = await Comment.findOrFail(id)
+      await bouncer.authorize('userComment', comment)
 
-      const comment = await Comment.query().where({ id: id }).first()
-      if (comment?.user_id === user?.id) {
-        await comment?.delete()
-        return response.withSuccess(
-          `post of ${user?.name} with ${comment?.id} is deleted successfully`,
-          comment
-        )
-      }
-      return response.json({
-        success: false,
-        message: `${user?.name} don't have access to delete this comments.`,
-      })
+      await comment?.delete()
+      return response.withSuccess(`post with ${comment?.id} is deleted successfully`, comment)
     } catch (e) {
       return response.withError(e.message)
     }

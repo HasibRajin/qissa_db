@@ -25,7 +25,7 @@ export default class StoreReactionRequestValidator {
    */
   public schema = schema.create({
     post_id: schema.number([rules.required()]),
-    relatable_type: schema.enum(['like', 'love'] as const, [rules.required()]),
+    reaction_type: schema.enum(['like', 'love'] as const, [rules.required()]),
   })
 
   /**
@@ -39,5 +39,5 @@ export default class StoreReactionRequestValidator {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }

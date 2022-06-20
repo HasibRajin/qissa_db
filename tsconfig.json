@@ -33,7 +33,8 @@
       "@adonisjs/auth",
       "@adonisjs/mail",
       "@adonisjs/view",
-      "@adonisjs/ally"
+      "@adonisjs/ally",
+      "@adonisjs/bouncer"
     ]
   }
 }

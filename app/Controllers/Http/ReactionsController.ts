@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Reaction from 'App/Models/Reaction'
-import Post from 'App/Models/Post'
+import CreateReaction from 'App/Validators/StoreReactionRequestValidator'
 
 export default class ReactionsController {
   public async index({ response }: HttpContextContract) {
@@ -15,22 +15,16 @@ export default class ReactionsController {
   public async store({ request, response, auth }: HttpContextContract) {
     try {
       const user = auth.user
-      const postId = request.qs().post_id
-      const reactionType = request.qs().reaction_type
-      const post = await Post.query().where({ id: postId }).first()
-
+      const payload = await request.validate(CreateReaction)
       const like = await Reaction.create({
         user_id: user?.id,
-        post_id: post?.id,
-        reaction_type: reactionType,
+        post_id: payload.post_id,
+        reaction_type: payload.reaction_type,
       })
-      if (like) {
-        await Post.query().where({ id: postId }).increment('like', 1)
-      }
 
-      return response.withSuccess(`liking post with id: ${post?.id} success`, like)
+      return response.withSuccess(`liking post with id: ${like?.post_id} success`, like)
     } catch (e) {
-      return response.withError(e.message)
+      return response.withError(e.messages)
     }
   }
 
@@ -43,25 +37,26 @@ export default class ReactionsController {
     }
   }
 
-  // public async update({}: HttpContextContract) {}
-
-  public async destroy({ params: { id }, response, auth }: HttpContextContract) {
+  public async update({ params: { id }, response, request, bouncer }: HttpContextContract) {
     try {
-      const user = auth.user
+      const userReaction = await Reaction.findOrFail(id)
+      await bouncer.authorize('userReaction', userReaction)
+      const reactionType = request.only(['reaction_type'])
+      userReaction?.merge(reactionType)
+      const reaction = await userReaction?.save()
+      return response.withSuccess('update success', reaction)
+    } catch (e) {
+      return response.withError(e.message)
+    }
+  }
 
-      const like = await Reaction.query().where({ id: id }).first()
-      if (like?.user_id === user?.id) {
-        await like?.delete()
-        await Post.query().where({ id: like?.post_id }).decrement('like', 1)
-        return response.withSuccess(
-          `Unlike successfully in ${like?.post_id} by ${user?.name}`,
-          like
-        )
-      }
-      return response.json({
-        success: false,
-        message: `${user?.name} doesn't have access to delete likes.`,
-      })
+  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
+    try {
+      const reaction = await Reaction.findOrFail(id)
+      await bouncer.authorize('userReaction', reaction)
+
+      await reaction?.delete()
+      return response.withSuccess(`Unlike successfully`, reaction)
     } catch (e) {
       return response.withError(e.message)
     }

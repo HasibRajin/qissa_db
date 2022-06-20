@@ -22,6 +22,7 @@ export default class Reactions extends BaseSchema {
         .notNullable()
       table.unique(['user_id', 'post_id'])
       table.enum('reaction_type', ['like', 'love'])
+
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

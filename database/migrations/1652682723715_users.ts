@@ -11,7 +11,6 @@ export default class UsersSchema extends BaseSchema {
       table.string('password', 100).notNullable()
       table.string('profile_pic')
       table.boolean('is_active')
-      table.integer('follower_count')
       table.string('remember_me_token').nullable()
 
       /**

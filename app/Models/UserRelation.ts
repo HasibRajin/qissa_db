@@ -11,6 +11,7 @@ export default class UserRelation extends BaseModel {
 
   @column()
   public relatable_id: number
+
   @column()
   public relatable_type: string
 
@@ -24,17 +25,10 @@ export default class UserRelation extends BaseModel {
     foreignKey: 'user_id',
   })
   public user: BelongsTo<typeof User>
+
   @hasMany(() => User, {
     foreignKey: 'id',
     localKey: 'relatable_id', // user_id column on "Post" model
   })
   public follower: HasMany<typeof User>
-
-  // @manyToMany(() => User, {
-  //   localKey: 'id',
-  //   pivotForeignKey: 'user_id',
-  //   relatedKey: 'id',
-  //   pivotRelatedForeignKey: 'relatable_id',
-  // })
-  // public user: ManyToMany<typeof User>
 }

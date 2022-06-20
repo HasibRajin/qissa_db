@@ -11,8 +11,6 @@ export default class RepliesController {
 
   public async show({}: HttpContextContract) {}
 
-  public async edit({}: HttpContextContract) {}
-
   public async update({}: HttpContextContract) {}
 
   public async destroy({}: HttpContextContract) {}

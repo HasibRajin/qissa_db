@@ -32,11 +32,13 @@ Route.get('/redirect/:drive', 'user/SocialLoginController.index')
 
 Route.group(() => {
   Route.get('/user', 'user/AuthController.index')
+  Route.get('/user/:id', 'user/AuthController.show')
   Route.post('/signup', 'user/AuthController.register')
   Route.post('/login', 'user/AuthController.login')
   Route.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail')
 
   Route.get('/post', 'PostsController.index')
+  Route.get('/post/:id', 'PostsController.index')
   Route.get('/topics', 'TopicsController.index')
 }).prefix('api')
 
@@ -46,10 +48,10 @@ Route.group(() => {
   Route.put('/profile', 'user/ProfilesController.update')
 
   Route.resource('/comment', 'CommentsController').apiOnly()
-  Route.resource('/post', 'PostsController').apiOnly().except(['index'])
+  Route.resource('/post', 'PostsController').apiOnly().except(['index', 'show'])
 
-  Route.resource('/reaction', 'ReactionsController').apiOnly().except(['update'])
-  Route.resource('/relation', 'UserRelationsController').apiOnly().except(['update'])
+  Route.resource('/reaction', 'ReactionsController').apiOnly()
+  Route.resource('/relation', 'UserRelationsController').apiOnly()
 
   Route.resource('/topic', 'TopicsController').apiOnly().except(['index'])
 })

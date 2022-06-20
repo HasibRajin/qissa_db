@@ -4,17 +4,15 @@ import Profile from 'App/Models/Profile'
 export default class ProfilesController {
   public async index({ response, auth }: HttpContextContract) {
     try {
-      const profiles = await Profile.query().where({ user_id: auth.user?.id }).first()
-      return response.json({
-        success: true,
-        message: `Found  profile`,
-        profiles: profiles,
-      })
+      const profile = await Profile.query().where({ user_id: auth.user?.id }).first()
+      return response.withSuccess(`Found  profile`, profile)
+      // return response.json({
+      //   success: true,
+      //   message: `Found  profile`,
+      //   profiles: profiles,
+      // })
     } catch (e) {
-      return response.json({
-        success: true,
-        message: e.message,
-      })
+      return response.withError(e.message)
     }
   }
 
@@ -24,7 +22,7 @@ export default class ProfilesController {
     try {
       const loginUser = auth.user
       const userData = request.only(['name', 'profile_pic'])
-      loginUser?.merge(userData)
+      await loginUser?.merge(userData)
       const user = await loginUser?.save()
       const profileData = request.only(['phone', 'date_of_birth', 'gender', 'education', 'address'])
 

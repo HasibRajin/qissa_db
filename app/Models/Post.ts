@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Reaction from 'App/Models/Reaction'
 import Comment from 'App/Models/Comment'
+import User from 'App/Models/User'
 
 export default class Post extends BaseModel {
   @column({ isPrimary: true })
@@ -17,9 +18,6 @@ export default class Post extends BaseModel {
   public details: string
 
   @column()
-  public like_count: number
-
-  @column()
   public image: string
 
   @column.dateTime({ autoCreate: true })
@@ -29,11 +27,17 @@ export default class Post extends BaseModel {
   public updatedAt: DateTime
 
   @hasMany(() => Reaction, {
-    foreignKey: 'post_id', // post_id column on "Reaction" model
+    foreignKey: 'post_id',
   })
   public reactions: HasMany<typeof Reaction>
+
   @hasMany(() => Comment, {
     foreignKey: 'post_id', // post_id column on "Reaction" model
   })
   public comments: HasMany<typeof Comment>
+
+  @belongsTo(() => User, {
+    foreignKey: 'user_id', // user_id column on "Reaction" model
+  })
+  public user: BelongsTo<typeof User>
 }

@@ -48,7 +48,7 @@ export default class LoginUserRequest {
    * }
    *
    */
-  public messages = {
+  public message = {
     'email': 'enter a valid email',
     'password.minLength': 'please. enter five digit password',
   }

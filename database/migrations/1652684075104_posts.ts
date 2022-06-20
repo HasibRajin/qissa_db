@@ -14,10 +14,9 @@ export default class Posts extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
       table.integer('topic_id').unsigned().references('id').inTable('topics').onDelete('CASCADE')
-      table.text('title', 'longtext').index('posts_title')
+      table.text('title', 'longtext').index('posts_title').nullable()
       table.text('details', 'longtext').notNullable().index('posts_details')
-      table.integer('like_count')
-      table.string('image')
+      table.string('image').nullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

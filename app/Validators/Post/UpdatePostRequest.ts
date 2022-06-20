@@ -37,5 +37,5 @@ export default class UpdatePostRequest {
    * }
    *
    */
-  public messages = {}
+  public message = {}
 }
