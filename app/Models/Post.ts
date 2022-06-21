@@ -26,6 +26,8 @@ export default class Post extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  public serializeExtras = true
+
   @hasMany(() => Reaction, {
     foreignKey: 'post_id',
   })
