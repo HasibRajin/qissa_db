@@ -24,7 +24,7 @@ export default class ReactionsController {
 
       return response.withSuccess(`liking post with id: ${like?.post_id} success`, like)
     } catch (e) {
-      return response.withError(e.messages)
+      return response.withError(e.message)
     }
   }
 
@@ -53,6 +53,7 @@ export default class ReactionsController {
   public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
     try {
       const reaction = await Reaction.findOrFail(id)
+
       await bouncer.authorize('userReaction', reaction)
 
       await reaction?.delete()
