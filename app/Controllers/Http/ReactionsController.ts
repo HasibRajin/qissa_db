@@ -50,10 +50,15 @@ export default class ReactionsController {
     }
   }
 
-  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
+  public async destroy({ params: { id }, response, bouncer, auth }: HttpContextContract) {
     try {
-      const reaction = await Reaction.findOrFail(id)
+      const reaction = await Reaction.query()
+        .where({ user_id: auth.user?.id })
+        .andWhere({ post_id: id })
+        .first()
 
+      // const reaction = await Reaction.findOrFail(reactionData.id)
+      // @ts-ignore
       await bouncer.authorize('userReaction', reaction)
 
       await reaction?.delete()
