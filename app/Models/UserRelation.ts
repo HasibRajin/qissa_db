@@ -30,5 +30,5 @@ export default class UserRelation extends BaseModel {
     foreignKey: 'id',
     localKey: 'relatable_id', // user_id column on "Post" model
   })
-  public follower: HasMany<typeof User>
+  public followers: HasMany<typeof User>
 }

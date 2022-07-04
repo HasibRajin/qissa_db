@@ -1,5 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import User from 'App/Models/User'
 import UserRelation from 'App/Models/UserRelation'
 import CreateRelation from 'App/Validators/StoreUserRelationRequest'
 
@@ -18,7 +17,7 @@ export default class UserRelationsController {
         //   .join('users', 'user_relations.relatable_id', '=', 'users.id')
         //   .select('user_relations.*', 'users.profile_pic', 'users.name')
         const follower = await UserRelation.query()
-          .preload('follower')
+          .preload('followers')
           .where({ user_id: relatableId })
           .andWhere({ relatable_type: 'follow' })
         return response.withSuccess(`found ${follower.length} followers`, follower)
@@ -35,23 +34,18 @@ export default class UserRelationsController {
 
   public async store({ request, response, auth }: HttpContextContract) {
     try {
-      const relatableId = auth.user?.id
       const payload = await request.validate(CreateRelation)
-      const user = await User.find(payload.user_id)
       const userRelation = await UserRelation.create({
-        user_id: user?.id,
-        relatable_id: relatableId,
+        user_id: payload.user_id,
+        relatable_id: auth.user?.id,
         relatable_type: payload.relatable_type,
       })
-
-      return response.withSuccess(
-        `${auth.user?.name} successfully ${userRelation.relatable_type} ${user?.name}  `,
-        userRelation
-      )
+      return response.withSuccess('follow successfully', userRelation)
     } catch (e) {
       return response.withError(e.message)
     }
   }
+
   public async update({ params: { id }, request, response, bouncer }: HttpContextContract) {
     try {
       const relationData = await UserRelation.findOrFail(id)

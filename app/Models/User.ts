@@ -62,6 +62,7 @@ export default class User extends BaseModel {
         .htmlView('emails/auth/verify', { user: this, url, appName, appDomain, currentYear })
     })
   }
+  public serializeExtras = true
 
   @beforeSave()
   public static async hashPassword(user: User) {
@@ -86,7 +87,7 @@ export default class User extends BaseModel {
   public reactions: HasMany<typeof Reaction>
 
   @hasMany(() => UserRelation, {
-    foreignKey: 'relatable_id', // user_id column on "Like" model
+    foreignKey: 'user_id', // user_id column on "Like" model
   })
   public follower: HasMany<typeof UserRelation>
 }

@@ -92,8 +92,10 @@ export default class AuthController {
           .where('id', id)
           .preload('profile')
           .preload('follower', (followerQuery) => {
-            followerQuery.where('user_id', followerId)
+            followerQuery.where('relatable_id', followerId)
           })
+          .withCount('follower')
+
         return response.withSuccess(`found user`, user)
       }
       const user = await User.query().where('id', id).preload('profile')
