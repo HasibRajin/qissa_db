@@ -1,2 +1,2 @@
-release: ENV_SILENT=true  node ./build/ace db:seed --files "./database/seeders/Comment.ts"
+release: ENV_SILENT=true  node ./build/ace migration:run --force
 web: npm run start:prod
