@@ -23,7 +23,7 @@ export default class ProfilesController {
       const loginUser = auth.user
       const userData = request.only(['name', 'profile_pic'])
       await loginUser?.merge(userData)
-      const user = await loginUser?.save()
+      await loginUser?.save()
       const profileData = request.only(['phone', 'date_of_birth', 'gender', 'education', 'address'])
 
       const profile = await loginUser?.related('profile').updateOrCreate(
@@ -38,10 +38,7 @@ export default class ProfilesController {
         }
       )
 
-      return response.withSuccess(`profile of ${loginUser?.name} is updated successfully`, {
-        user,
-        profile,
-      })
+      return response.withSuccess(`profile of ${loginUser?.name} is updated successfully`, profile)
     } catch (e) {
       return response.withError(e.message)
     }
