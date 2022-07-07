@@ -46,10 +46,15 @@ export default class UserRelationsController {
     }
   }
 
-  public async update({ params: { id }, request, response, bouncer }: HttpContextContract) {
+  public async update({ params: { id }, request, response, bouncer, auth }: HttpContextContract) {
     try {
-      const relationData = await UserRelation.findOrFail(id)
-      await bouncer.authorize('userRelation', relationData)
+      const relationData = await UserRelation.query()
+        .where({ user_id: auth.user?.id })
+        .andWhere({ relatable_id: id })
+        .first()
+
+      // @ts-ignore
+      await bouncer.authorize('userRelation', relation)
       const relatableType = request.only(['relatable_type'])
       relationData?.merge(relatableType)
       const relation = await relationData?.save()
@@ -73,13 +78,17 @@ export default class UserRelationsController {
     }
   }
 
-  public async destroy({ params: { id }, response, bouncer }: HttpContextContract) {
+  public async destroy({ params: { id }, response, bouncer, auth }: HttpContextContract) {
     try {
-      const relationData = await UserRelation.findOrFail(id)
-      await bouncer.authorize('userRelation', relationData)
-
-      await relationData?.delete()
-      return response.withSuccess(` successfully un${relationData?.relatable_type}`, relationData)
+      // const relationData = await UserRelation.findOrFail(id)
+      const relation = await UserRelation.query()
+        .where({ user_id: auth.user?.id })
+        .andWhere({ relatable_id: id })
+        .first()
+      // @ts-ignore
+      await bouncer.authorize('userRelation', relation)
+      await relation?.delete()
+      return response.withSuccess(` successfully un${relation?.relatable_type}`, relation)
     } catch (e) {
       return response.withError(e.message)
     }
