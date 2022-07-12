@@ -61,12 +61,12 @@ export default class UserRelationsController {
   public async update({ params: { id }, request, response, bouncer, auth }: HttpContextContract) {
     try {
       const relationData = await UserRelation.query()
-        .where({ user_id: auth.user?.id })
-        .andWhere({ relatable_id: id })
+        .where({ user_id: id })
+        .andWhere({ relatable_id: auth.user?.id })
         .first()
 
       // @ts-ignore
-      await bouncer.authorize('userRelation', relation)
+      await bouncer.authorize('userRelation', relationData)
       const relatableType = request.only(['relatable_type'])
       relationData?.merge(relatableType)
       const relation = await relationData?.save()
@@ -78,11 +78,10 @@ export default class UserRelationsController {
   // take user id as parameter and check the login user have any relation with the other user.
   public async show({ params: { id }, response, auth }: HttpContextContract) {
     try {
-      const relatableID = auth.user?.id
       const relationData = await UserRelation.query()
         .preload('user')
         .where({ user_id: id })
-        .andWhere({ relatable_id: relatableID })
+        .andWhere({ relatable_id: auth.user?.id })
         .first()
       return response.withSuccess(`found relation `, relationData)
     } catch (e) {
@@ -94,8 +93,8 @@ export default class UserRelationsController {
     try {
       // const relationData = await UserRelation.findOrFail(id)
       const relation = await UserRelation.query()
-        .where({ user_id: auth.user?.id })
-        .andWhere({ relatable_id: id })
+        .where({ user_id: id })
+        .andWhere({ relatable_id: auth.user?.id })
         .first()
       // @ts-ignore
       await bouncer.authorize('userRelation', relation)
