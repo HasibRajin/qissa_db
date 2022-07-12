@@ -20,12 +20,24 @@ export default class UserRelationsController {
           .preload('followers')
           .where({ user_id: relatableId })
           .andWhere({ relatable_type: 'follow' })
+          .orderBy([
+            {
+              column: 'created_at',
+              order: 'desc',
+            },
+          ])
         return response.withSuccess(`found ${follower.length} followers`, follower)
       }
       const relationData = await UserRelation.query()
         .preload('user')
         .where({ relatable_id: relatableId })
         .andWhere({ relatable_type: data })
+        .orderBy([
+          {
+            column: 'created_at',
+            order: 'desc',
+          },
+        ])
       return response.withSuccess(`found ${relationData.length} ${data}`, relationData)
     } catch (e) {
       return response.withError(e.message)

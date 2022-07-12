@@ -30,7 +30,15 @@ export default class ReactionsController {
 
   public async show({ response, params: { id } }: HttpContextContract) {
     try {
-      const like = await Reaction.query().preload('user').where('post_id', id)
+      const like = await Reaction.query()
+        .preload('user')
+        .where('post_id', id)
+        .orderBy([
+          {
+            column: 'created_at',
+            order: 'desc',
+          },
+        ])
       return response.withSuccess(`found ${like.length} likes`, like)
     } catch (e) {
       return response.withError(e.message)

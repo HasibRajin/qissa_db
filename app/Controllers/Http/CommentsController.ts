@@ -27,7 +27,15 @@ export default class CommentsController {
 
   public async show({ response, params: { id } }: HttpContextContract) {
     try {
-      const comment = await Comment.query().where({ post_id: id }).preload('user')
+      const comment = await Comment.query()
+        .where({ post_id: id })
+        .preload('user')
+        .orderBy([
+          {
+            column: 'created_at',
+            order: 'desc',
+          },
+        ])
       return response.withSuccess(`found ${comment?.length} likes`, comment)
     } catch (e) {
       return response.withError(e.message)
