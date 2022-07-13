@@ -47,11 +47,21 @@ export default class UserRelationsController {
   public async store({ request, response, auth }: HttpContextContract) {
     try {
       const payload = await request.validate(CreateRelation)
-      const userRelation = await UserRelation.create({
-        user_id: payload.user_id,
-        relatable_id: auth.user?.id,
-        relatable_type: payload.relatable_type,
-      })
+      // const userRelation = await UserRelation.create({
+      //   user_id: payload.user_id,
+      //   relatable_id: auth.user?.id,
+      //   relatable_type: payload.relatable_type,
+      // })
+
+      const userRelation = await UserRelation.updateOrCreate(
+        {
+          user_id: payload.user_id,
+          relatable_id: auth.user?.id,
+        },
+        {
+          relatable_type: payload.relatable_type,
+        }
+      )
       return response.withSuccess('follow successfully', userRelation)
     } catch (e) {
       return response.withError(e.message)
