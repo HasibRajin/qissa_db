@@ -38,7 +38,7 @@ Route.group(() => {
   Route.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail')
 
   Route.get('/post', 'PostsController.index')
-  Route.get('/post/:id', 'PostsController.index')
+  Route.get('/post/:id', 'PostsController.show')
   Route.get('/topics', 'TopicsController.index')
 }).prefix('api')
 

@@ -76,17 +76,17 @@ export default class PostsController {
       if (likerId) {
         const post = await Post.query()
           .where({ user_id: id })
-          .preload('reactions', (reactionsQuery) => {
-            reactionsQuery.where('user_id', likerId)
-          })
-          .withCount('reactions')
-          .withCount('comments')
-          .orderBy([
-            {
-              column: 'created_at',
-              order: 'desc',
-            },
-          ])
+          // .preload('reactions', (reactionsQuery) => {
+          //   reactionsQuery.where('user_id', likerId)
+          // })
+          // .withCount('reactions')
+          // .withCount('comments')
+          // .orderBy([
+          //   {
+          //     column: 'created_at',
+          //     order: 'desc',
+          //   },
+          // ])
           .paginate(request.qs().current_page, request.qs().limit)
         return response.withSuccess(`Found ${post.length} posts`, post)
       }
