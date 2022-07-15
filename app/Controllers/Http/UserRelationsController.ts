@@ -17,7 +17,9 @@ export default class UserRelationsController {
         //   .join('users', 'user_relations.relatable_id', '=', 'users.id')
         //   .select('user_relations.*', 'users.profile_pic', 'users.name')
         const follower = await UserRelation.query()
-          .preload('followers')
+          .preload('followers', (followersQuery) => {
+            followersQuery.withCount('follower')
+          })
           .where({ user_id: relatableId })
           .andWhere({ relatable_type: 'follow' })
           .orderBy([
@@ -26,10 +28,14 @@ export default class UserRelationsController {
               order: 'desc',
             },
           ])
+          .paginate(request.qs().current_page, request.qs().limit)
+
         return response.withSuccess(`found ${follower.length} followers`, follower)
       }
       const relationData = await UserRelation.query()
-        .preload('user')
+        .preload('user', (userQuery) => {
+          userQuery.withCount('follower')
+        })
         .where({ relatable_id: relatableId })
         .andWhere({ relatable_type: data })
         .orderBy([
@@ -38,6 +44,8 @@ export default class UserRelationsController {
             order: 'desc',
           },
         ])
+        .paginate(request.qs().current_page, request.qs().limit)
+
       return response.withSuccess(`found ${relationData.length} ${data}`, relationData)
     } catch (e) {
       return response.withError(e.message)
