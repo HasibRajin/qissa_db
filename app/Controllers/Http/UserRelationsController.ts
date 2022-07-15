@@ -3,9 +3,9 @@ import UserRelation from 'App/Models/UserRelation'
 import CreateRelation from 'App/Validators/StoreUserRelationRequest'
 
 export default class UserRelationsController {
-  public async index({ request, response, auth }: HttpContextContract) {
+  public async index({ request, response }: HttpContextContract) {
     try {
-      const relatableId = auth.user?.id
+      const relatableId = request.qs().relatable_id
       const data = request.qs().relatable_type
       const re = new RegExp(/^(follow|follower|favourite|block)$/g)
       if (!re.test(data)) {

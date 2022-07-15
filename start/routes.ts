@@ -45,7 +45,9 @@ Route.group(() => {
 Route.group(() => {
   Route.post('/logout', 'AuthController.logout')
   Route.get('/profile', 'user/ProfilesController.index')
-  Route.put('/profile', 'user/ProfilesController.update')
+  Route.put('/user/info', 'user/ProfilesController.update')
+  Route.put('/profile/Info', 'user/ProfilesController.updateProfileInfo')
+  Route.put('/profile/image', 'user/ProfilesController.updateProfilePic')
 
   Route.resource('/comment', 'CommentsController').apiOnly()
   Route.resource('/post', 'PostsController').apiOnly().except(['index', 'show'])
