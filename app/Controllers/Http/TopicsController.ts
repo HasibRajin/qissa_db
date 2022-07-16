@@ -4,7 +4,7 @@ import Post from 'App/Models/Post'
 
 export default class TopicsController {
   public async index({ response }: HttpContextContract) {
-    const topic = Topic.all()
+    const topic = await Topic.all()
     return response.withSuccess(`Found topics`, topic)
   }
 

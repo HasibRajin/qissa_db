@@ -40,6 +40,7 @@ Route.group(() => {
   Route.get('/post', 'PostsController.index')
   Route.get('/post/:id', 'PostsController.show')
   Route.get('/topics', 'TopicsController.index')
+  Route.get('/topics/:id', 'TopicsController.show')
 }).prefix('api')
 
 Route.group(() => {
@@ -55,7 +56,7 @@ Route.group(() => {
   Route.resource('/reaction', 'ReactionsController').apiOnly()
   Route.resource('/relation', 'UserRelationsController').apiOnly()
 
-  Route.resource('/topic', 'TopicsController').apiOnly().except(['index'])
+  Route.resource('/topic', 'TopicsController').apiOnly().except(['index', 'show'])
 })
 
   .prefix('api')
