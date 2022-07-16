@@ -3,8 +3,9 @@ import Topic from 'App/Models/Topic'
 import Post from 'App/Models/Post'
 
 export default class TopicsController {
-  public async index({}: HttpContextContract) {
-    return Topic.all()
+  public async index({ response }: HttpContextContract) {
+    const topic = Topic.all()
+    return response.withSuccess(`Found topics`, topic)
   }
 
   public async store({ request, response }: HttpContextContract) {
@@ -20,19 +21,34 @@ export default class TopicsController {
   public async show({ params: { id }, response, request }: HttpContextContract) {
     try {
       const likerId = request.qs().liker_id
-      if (likerId) {
+      const userId = request.qs().user_id
+      if (userId && likerId) {
+        const post = await Post.query()
+          .where('topic_id', id)
+          .andWhere('user_id', userId)
+          .preload('user')
+          .preload('reactions', (reactionQuery) => {
+            reactionQuery.where('user_id', likerId)
+          })
+          .withCount('reactions')
+          .withCount('comments')
+          .orderBy([
+            {
+              column: 'created_at',
+              order: 'desc',
+            },
+          ])
+          .paginate(request.qs().current_page, request.qs().limit)
+        return response.withSuccess(`Found ${post.length} posts`, post)
+      } else if (likerId) {
         const post = await Post.query()
           .where('topic_id', id)
           .preload('user')
           .preload('reactions', (reactionQuery) => {
             reactionQuery.where('user_id', likerId)
           })
-          .withCount('reactions', (query) => {
-            query.as('reaction_count')
-          })
-          .withCount('comments', (query) => {
-            query.as('comments_count')
-          })
+          .withCount('reactions')
+          .withCount('comments')
           .orderBy([
             {
               column: 'created_at',
@@ -45,12 +61,8 @@ export default class TopicsController {
       const post = await Post.query()
         .where('topic_id', id)
         .preload('user')
-        .withCount('reactions', (query) => {
-          query.as('reaction_count')
-        })
-        .withCount('comments', (query) => {
-          query.as('comments_count')
-        })
+        .withCount('reactions')
+        .withCount('comments')
         .orderBy([
           {
             column: 'created_at',

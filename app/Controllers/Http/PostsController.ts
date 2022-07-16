@@ -75,7 +75,6 @@ export default class PostsController {
       const likerId = request.qs().liker_id
       if (likerId) {
         const post = await Post.query()
-          .preload('user')
           .where({ user_id: id })
           .preload('reactions', (reactionsQuery) => {
             reactionsQuery.where('user_id', likerId)
@@ -92,7 +91,6 @@ export default class PostsController {
         return response.withSuccess(`Found ${post.length} posts`, post)
       }
       const post = await Post.query()
-        .preload('user')
         .where({ user_id: id })
         .withCount('reactions')
         .withCount('comments')
