@@ -4,7 +4,12 @@ import Post from 'App/Models/Post'
 
 export default class TopicsController {
   public async index({ response }: HttpContextContract) {
-    const topic = await Topic.all()
+    const topic = await Topic.query().orderBy([
+      {
+        column: 'created_at',
+        order: 'asc',
+      },
+    ])
     return response.withSuccess(`Found topics`, topic)
   }
 
