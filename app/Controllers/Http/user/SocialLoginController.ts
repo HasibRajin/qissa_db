@@ -68,4 +68,27 @@ export default class SocialLoginController {
       return response.withError(e.message)
     }
   }
+
+  public async socialLogin({ request, response, auth }: HttpContextContract) {
+    try {
+      const userData = request.only(['name', 'email', 'profile_pic'])
+
+      const user = await User.firstOrCreate(
+        {
+          email: userData.email,
+        },
+        {
+          name: userData.name,
+          password: faker.internet.password(8),
+          is_active: true,
+          profile_pic: userData.profile_pic,
+        }
+      )
+      const token = await auth.use('api').generate(user)
+      await user.related('profile').create({ user_id: user.id })
+      return response.withSuccess('user login success', { user, token })
+    } catch (e) {
+      return response.withError(e.message)
+    }
+  }
 }

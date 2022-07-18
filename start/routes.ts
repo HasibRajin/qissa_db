@@ -35,6 +35,7 @@ Route.group(() => {
   Route.get('/user/:id', 'user/AuthController.show')
   Route.post('/signup', 'user/AuthController.register')
   Route.post('/login', 'user/AuthController.login')
+  Route.post('/socialLogin', 'user/SocialLoginController.socialLogin')
   Route.get('/verify-email/:email', 'user/EmailVerificationsController.confirm').as('verifyEmail')
 
   Route.get('/post', 'PostsController.index')
