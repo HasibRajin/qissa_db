@@ -45,7 +45,7 @@ Route.group(() => {
 }).prefix('api')
 
 Route.group(() => {
-  Route.post('/logout', 'AuthController.logout')
+  Route.post('/logout', 'user/AuthController.logout')
   Route.get('/profile', 'user/ProfilesController.index')
   Route.put('/user/info', 'user/ProfilesController.update')
   Route.put('/profile/info', 'user/ProfilesController.updateProfileInfo')
