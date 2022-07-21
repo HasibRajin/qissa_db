@@ -42,6 +42,7 @@ Route.group(() => {
   Route.get('/post/:id', 'PostsController.show')
   Route.get('/topics', 'TopicsController.index')
   Route.get('/topics/:id', 'TopicsController.show')
+  Route.get('/search', 'SearchesController.index')
 }).prefix('api')
 
 Route.group(() => {
