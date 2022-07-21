@@ -27,7 +27,6 @@ export default class SearchesController {
               order: 'desc',
             },
           ])
-          .paginate(request.qs().current_page, request.qs().limit)
       } else {
         post = await Post.query()
           .where('title', 'like', `%${requestData}%`)
@@ -41,7 +40,6 @@ export default class SearchesController {
               order: 'desc',
             },
           ])
-          .paginate(request.qs().current_page, request.qs().limit)
       }
       const topic = await Topic.query().where('name', 'like', `%${requestData}%`)
       const user = await User.query()
