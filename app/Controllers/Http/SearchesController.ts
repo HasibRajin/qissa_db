@@ -21,12 +21,6 @@ export default class SearchesController {
           })
           .withCount('reactions')
           .withCount('comments')
-          .orderBy([
-            {
-              column: 'created_at',
-              order: 'desc',
-            },
-          ])
       } else {
         post = await Post.query()
           .where('title', 'like', `%${requestData}%`)
@@ -34,12 +28,6 @@ export default class SearchesController {
           .preload('user')
           .withCount('reactions')
           .withCount('comments')
-          .orderBy([
-            {
-              column: 'created_at',
-              order: 'desc',
-            },
-          ])
       }
       const topic = await Topic.query().where('name', 'like', `%${requestData}%`)
       const user = await User.query()
