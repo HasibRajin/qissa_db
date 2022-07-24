@@ -13,7 +13,7 @@ export default class SearchesController {
 
       if (likerId) {
         post = await Post.query()
-          .where('title', 'like', `%${requestData}%`)
+          .where('title', 'Ilike', `%${requestData}%`)
           .orWhere('details', 'like', `%${requestData}%`)
           .preload('user')
           .preload('reactions', (reactionQuery) => {
@@ -23,16 +23,16 @@ export default class SearchesController {
           .withCount('comments')
       } else {
         post = await Post.query()
-          .where('title', 'like', `%${requestData}%`)
+          .where('title', 'Ilike', `%${requestData}%`)
           .orWhere('details', 'like', `%${requestData}%`)
           .preload('user')
           .withCount('reactions')
           .withCount('comments')
       }
-      const topic = await Topic.query().where('name', 'like', `%${requestData}%`)
+      const topic = await Topic.query().where('name', 'Ilike', `%${requestData}%`)
       const user = await User.query()
-        .where('name', 'like', `%${requestData}%`)
-        .orWhere('email', 'like', `%${requestData}%`)
+        .where('name', 'Ilike', `%${requestData}%`)
+        .orWhere('email', 'Ilike', `%${requestData}%`)
       return response.withSuccess(`Found result`, { post, user, topic })
     } catch (e) {
       return response.withError(e.message)
