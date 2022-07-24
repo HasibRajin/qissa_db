@@ -32,7 +32,7 @@ export default class AnswersController {
         const answer = await Answer.query()
           .where({ question_id: id })
           .preload('user')
-          .orWhereHas('claps', (clapsQuery) => {
+          .preload('claps', (clapsQuery) => {
             clapsQuery.where({ user_id: likerId })
           })
           .withCount('claps')
