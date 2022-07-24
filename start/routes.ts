@@ -43,6 +43,12 @@ Route.group(() => {
   Route.get('/topics', 'TopicsController.index')
   Route.get('/topics/:id', 'TopicsController.show')
   Route.get('/search', 'SearchesController.index')
+
+  Route.get('/relation', 'UserRelationsController.index')
+  Route.get('/comment/:id', 'CommentsController.show')
+
+  Route.get('/question', 'QuestionsController.index')
+  Route.get('/answer/:id', 'AnswersController.show')
 }).prefix('api')
 
 Route.group(() => {
@@ -52,13 +58,17 @@ Route.group(() => {
   Route.put('/profile/info', 'user/ProfilesController.updateProfileInfo')
   Route.put('/profile/image', 'user/ProfilesController.updateProfilePic')
 
-  Route.resource('/comment', 'CommentsController').apiOnly()
+  Route.resource('/comment', 'CommentsController').apiOnly().except(['show'])
   Route.resource('/post', 'PostsController').apiOnly().except(['index', 'show'])
 
   Route.resource('/reaction', 'ReactionsController').apiOnly()
-  Route.resource('/relation', 'UserRelationsController').apiOnly()
+  Route.resource('/relation', 'UserRelationsController').apiOnly().except(['index'])
 
   Route.resource('/topic', 'TopicsController').apiOnly().except(['index', 'show'])
+
+  Route.resource('/question', 'QuestionsController').apiOnly().except(['index', 'show'])
+  Route.resource('/answer', 'AnswersController').apiOnly().except(['index', 'show'])
+  Route.resource('/clap', 'ClapsController').apiOnly().except(['update', 'show'])
 })
 
   .prefix('api')

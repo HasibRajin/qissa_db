@@ -11,6 +11,9 @@ import Post from 'App/Models/Post'
 import Comment from 'App/Models/Comment'
 import Reaction from '../app/Models/Reaction'
 import UserRelation from '../app/Models/UserRelation'
+import Question from 'App/Models/Question'
+import Answer from 'App/Models/Answer'
+import Clap from 'App/Models/Clap'
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +49,15 @@ export const { actions } = Bouncer.define('userPost', (user: User, post: Post) =
   .define('userRelation', (user: User, relation: UserRelation) => {
     return relation.relatable_id === user.id
   })
-
+  .define('userQuestion', (user: User, question: Question) => {
+    return question.user_id === user.id
+  })
+  .define('userAnswer', (user: User, answer: Answer) => {
+    return answer.user_id === user.id
+  })
+  .define('userClap', (user: User, clap: Clap) => {
+    return clap.user_id === user.id
+  })
 /*
 |--------------------------------------------------------------------------
 | Bouncer Policies

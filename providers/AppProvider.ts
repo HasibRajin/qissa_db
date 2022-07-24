@@ -9,6 +9,11 @@ export default class AppProvider {
 
   public async boot() {
     const Response = this.app.container.use('Adonis/Core/Response')
+    const { DatabaseQueryBuilder } = this.app.container.use('Adonis/Lucid/Database')
+    DatabaseQueryBuilder.macro('getCount', async function () {
+      const result = await this.count('* as total')
+      return BigInt(result[0].total)
+    })
 
     Response.macro('withSuccess', function (message, data = undefined, status = 200) {
       let response = { success: true, message }
@@ -18,7 +23,7 @@ export default class AppProvider {
       this.status(status).json(response)
       return this
     })
-    Response.macro('withError', function (message, status = 200) {
+    Response.macro('withError', function (message, status = 404) {
       let response = { success: false, message }
       this.status(status).json(response)
       return this

@@ -16,6 +16,8 @@ import Mail from '@ioc:Adonis/Addons/Mail'
 import Env from '@ioc:Adonis/Core/Env'
 import Route from '@ioc:Adonis/Core/Route'
 import UserRelation from 'App/Models/UserRelation'
+import Question from 'App/Models/Question'
+import Clap from 'App/Models/Clap'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -90,4 +92,14 @@ export default class User extends BaseModel {
     foreignKey: 'user_id', // user_id column on "Like" model
   })
   public follower: HasMany<typeof UserRelation>
+
+  @hasMany(() => Question, {
+    foreignKey: 'user_id', // user_id column on "Post" model
+  })
+  public questions: HasMany<typeof Question>
+
+  @hasMany(() => Clap, {
+    foreignKey: 'user_id', // user_id column on "Like" model
+  })
+  public claps: HasMany<typeof Clap>
 }
