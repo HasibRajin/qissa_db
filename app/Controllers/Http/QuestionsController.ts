@@ -1,5 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Post from 'App/Models/Post'
 import CreateQuestion from 'App/Validators/QuestionAnswer/CreateQuestionValidator'
 import Question from 'App/Models/Question'
 
@@ -28,12 +27,12 @@ export default class QuestionsController {
       const user = auth.user
       const questionData = await request.validate(CreateQuestion)
 
-      const post = await Post.create({
+      const question = await Question.create({
         user_id: user?.id,
         topic_id: questionData.topic_id,
         title: questionData.title,
       })
-      return response.withSuccess('question creation success', post)
+      return response.withSuccess('question creation success', [question])
     } catch (e) {
       if (e.messages) {
         return response.withError(e.messages)

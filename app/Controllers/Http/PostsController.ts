@@ -34,6 +34,7 @@ export default class PostsController {
           },
         ])
         .paginate(request.qs().current_page, request.qs().limit)
+      // .pagination(request.qs().current_page, request.qs().back_off)
 
       // console.log(post.toJSON())
       // return response.send(post.toJSON())

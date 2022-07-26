@@ -16,7 +16,7 @@ export default class AnswersController {
         question_id: answerData.question_id,
         answer_details: answerData.answer_details,
       })
-      return response.withSuccess('answer creation success', answer)
+      return response.withSuccess('answer creation success', [answer])
     } catch (e) {
       if (e.messages) {
         return response.withError(e.messages)

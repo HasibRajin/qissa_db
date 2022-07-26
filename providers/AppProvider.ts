@@ -9,12 +9,38 @@ export default class AppProvider {
 
   public async boot() {
     const Response = this.app.container.use('Adonis/Core/Response')
-    const { DatabaseQueryBuilder } = this.app.container.use('Adonis/Lucid/Database')
-    DatabaseQueryBuilder.macro('getCount', async function () {
-      const result = await this.count('* as total')
-      return BigInt(result[0].total)
-    })
 
+    const { ModelQueryBuilder } = this.app.container.use('Adonis/Lucid/Database')
+    let array: Array<object> = []
+    let bacOff = 0
+    let i = 0
+    ModelQueryBuilder.macro('pagination', async function (current_page, back_off) {
+      // eslint-disable-next-line eqeqeq
+      array = []
+      i = 0
+      if (current_page <= 1 || back_off === 0) {
+        return await this.paginate(current_page)
+      } else {
+        bacOff = back_off
+        const result1 = await this.paginate(Number.parseInt(current_page, 10) - 1)
+        const result2 = await this.paginate(current_page)
+        result1.forEach(getPreviousData)
+        result2.forEach(addCurrentData)
+        return array
+      }
+    })
+    function getPreviousData(item, index, arr) {
+      if (index >= arr.length - bacOff) {
+        array[i] = item
+        i++
+      }
+    }
+    function addCurrentData(item, index, arr) {
+      if (index < arr.length - bacOff) {
+        array[i] = item
+        i++
+      }
+    }
     Response.macro('withSuccess', function (message, data = undefined, status = 200) {
       let response = { success: true, message }
       if (data !== undefined) {
