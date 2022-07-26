@@ -3,6 +3,7 @@ import User from 'App/Models/User'
 
 import CreateUser from 'App/Validators/Auth/StoreUserRequest'
 import Login from 'App/Validators/Auth/LoginUserRequest'
+import Mail from '@ioc:Adonis/Addons/Mail'
 
 export default class AuthController {
   public async index({ response }: HttpContextContract) {
@@ -34,10 +35,10 @@ export default class AuthController {
         // @ts-ignore
         profile_pic: null,
       })
-      // await Mail.send((message) => {
-      //   message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('tyhtyhythn')
-      // })
-      // user?.sendVerificationEmail()
+      await Mail.send((message) => {
+        message.from('md.hasibul.hasan@g.bracu.ac.bd').to(userData.email).text('Verification Mail')
+      })
+      user?.sendVerificationEmail()
       // await Event.emit('new:user', { id: user.id, email: user.email, name: user.name })
       await auth.use('api').revoke()
       const token = await auth.use('api').generate(user)
