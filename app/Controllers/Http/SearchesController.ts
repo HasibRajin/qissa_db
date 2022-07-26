@@ -52,20 +52,27 @@ export default class SearchesController {
       return response.withError(e.message)
     }
   }
-  public async searchQuestionWithTopic({ request, response }: HttpContextContract) {
+  public async searchQuestion({ request, response }: HttpContextContract) {
     try {
       const requestData = request.qs().request_data
-      const topic = Topic.query().where('name', 'like', `%${requestData}%`)
-      return response.withSuccess(` found posts`, topic)
+      const question = await Question.query()
+        .where('title', 'Ilike', `%${requestData}%`)
+        .preload('user')
+        .paginate(request.qs().current_page, request.qs().limit)
+      return response.withSuccess(` found posts`, question)
     } catch (e) {
       return response.withError(e.message)
     }
   }
-  public async searchQuestion({ request, response }: HttpContextContract) {
+
+  public async searchQuestionWithTopic({ params: { id }, request, response }: HttpContextContract) {
     try {
-      const requestData = request.qs().request_data
-      const question = Question.query().where('title', 'Ilike', `%${requestData}%`)
-      return response.withSuccess(` found posts`, question)
+      const topic = await Question.query()
+        .where({ topic_id: id })
+        .preload('user')
+        .paginate(request.qs().current_page, request.qs().limit)
+
+      return response.withSuccess(` found posts`, topic)
     } catch (e) {
       return response.withError(e.message)
     }
