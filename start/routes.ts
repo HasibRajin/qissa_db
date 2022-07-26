@@ -44,7 +44,6 @@ Route.group(() => {
   Route.get('/topics/:id', 'TopicsController.show')
   Route.get('/search', 'SearchesController.index')
   Route.get('/search/question', 'SearchesController.searchQuestion')
-  Route.get('/search/question/:id', 'SearchesController.searchQuestionWithTopic')
 
   Route.get('/relation', 'UserRelationsController.index')
   Route.get('/comment/:id', 'CommentsController.show')

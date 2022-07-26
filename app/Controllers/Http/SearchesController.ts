@@ -43,7 +43,7 @@ export default class SearchesController {
     try {
       const requestData = request.qs().request_data
 
-      const user = User.query()
+      const user = await User.query()
         .where('name', 'like', `%${requestData}%`)
         .orWhere('email', 'like', `%${requestData}%`)
 
@@ -55,24 +55,21 @@ export default class SearchesController {
   public async searchQuestion({ request, response }: HttpContextContract) {
     try {
       const requestData = request.qs().request_data
-      const question = await Question.query()
-        .where('title', 'Ilike', `%${requestData}%`)
-        .preload('user')
-        .paginate(request.qs().current_page, request.qs().limit)
-      return response.withSuccess(` found posts`, question)
-    } catch (e) {
-      return response.withError(e.message)
-    }
-  }
+      const topicId = request.qs().topic_id
+      if (topicId) {
+        const question = await Question.query()
+          .where({ topic_id: topicId })
+          .preload('user')
+          .paginate(request.qs().current_page, request.qs().limit)
 
-  public async searchQuestionWithTopic({ params: { id }, request, response }: HttpContextContract) {
-    try {
-      const topic = await Question.query()
-        .where({ topic_id: id })
-        .preload('user')
-        .paginate(request.qs().current_page, request.qs().limit)
-
-      return response.withSuccess(` found posts`, topic)
+        return response.withSuccess(` found question`, question)
+      } else {
+        const question = await Question.query()
+          .where('title', 'Ilike', `%${requestData}%`)
+          .preload('user')
+          .paginate(request.qs().current_page, request.qs().limit)
+        return response.withSuccess(` found question`, question)
+      }
     } catch (e) {
       return response.withError(e.message)
     }
