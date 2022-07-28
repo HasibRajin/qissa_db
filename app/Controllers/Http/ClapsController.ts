@@ -19,7 +19,6 @@ export default class ClapsController {
         user_id: user?.id,
         answer_id: answerID,
       })
-
       return response.withSuccess(`clap success`, clap)
     } catch (e) {
       return response.withError(e.message)

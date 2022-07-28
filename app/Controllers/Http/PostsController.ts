@@ -63,6 +63,7 @@ export default class PostsController {
         user: user,
         message: 'A new post has uploaded.',
       })
+
       return response.withSuccess('post creation success', post)
     } catch (e) {
       if (e.messages) {

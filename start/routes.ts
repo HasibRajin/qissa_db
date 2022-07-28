@@ -26,7 +26,9 @@ Route.get('/', async ({ view }) => {
 Route.get('/test', async () => {
   return { test: 'Api is working fine' }
 })
-
+Route.get('/notify', async ({ view }) => {
+  return view.render('seeNotification')
+})
 Route.get('/callback/:drive', 'user/SocialLoginController.callback')
 Route.get('/redirect/:drive', 'user/SocialLoginController.index')
 
