@@ -25,11 +25,13 @@ declare module '@ioc:Adonis/Core/Event' {
   | an instance of the the UserModel only.
   |
   */
+  import DeferredKeySelection from 'knex'
+
   interface EventsList {
     'new:user': { id: number; email: string; name: string }
     'new:post': {
       id: number
-      userID: number
+      user: any
       message: string
     }
   }
