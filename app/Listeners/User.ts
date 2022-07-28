@@ -19,7 +19,7 @@ export default class User {
   public async onNewPost(post: EventsList['new:post']) {
     await pusher.trigger('qissabd', 'post', {
       postId: post.id,
-      userID: post.userID,
+      user: post.user,
       message: post.message,
     })
   }
