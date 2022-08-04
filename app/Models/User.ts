@@ -18,6 +18,7 @@ import Route from '@ioc:Adonis/Core/Route'
 import UserRelation from 'App/Models/UserRelation'
 import Question from 'App/Models/Question'
 import Clap from 'App/Models/Clap'
+import UserChat from 'App/Models/UserChat'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -102,4 +103,10 @@ export default class User extends BaseModel {
     foreignKey: 'user_id', // user_id column on "Like" model
   })
   public claps: HasMany<typeof Clap>
+
+  @hasMany(() => UserChat, {
+    foreignKey: 'user_id',
+    localKey: 'id',
+  })
+  public users: HasMany<typeof UserChat>
 }

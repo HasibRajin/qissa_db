@@ -8,7 +8,7 @@
     "start:prod": "node ./build/server.js"
   },
   "engines": {
-    "node": "16.15.1"
+    "node": "16.16.0"
   },
   "eslintConfig": {
     "extends": [

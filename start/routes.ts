@@ -68,7 +68,7 @@ Route.group(() => {
   Route.resource('/relation', 'UserRelationsController').apiOnly().except(['index'])
 
   Route.resource('/topic', 'TopicsController').apiOnly().except(['index', 'show'])
-
+  Route.resource('/chat', 'UserChatsController').apiOnly().except(['destroy', 'show'])
   Route.resource('/question', 'QuestionsController').apiOnly().except(['index', 'show'])
   Route.resource('/answer', 'AnswersController').apiOnly().except(['index', 'show'])
   Route.resource('/clap', 'ClapsController').apiOnly().except(['update', 'show'])
