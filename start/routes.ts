@@ -46,6 +46,7 @@ Route.group(() => {
   Route.get('/topics/:id', 'TopicsController.show')
   Route.get('/search', 'SearchesController.index')
   Route.get('/search/question', 'SearchesController.searchQuestion')
+  Route.get('/search/user', 'SearchesController.searchUser')
 
   Route.get('/relation', 'UserRelationsController.index')
   Route.get('/comment/:id', 'CommentsController.show')
@@ -60,6 +61,7 @@ Route.group(() => {
   Route.put('/user/info', 'user/ProfilesController.update')
   Route.put('/profile/info', 'user/ProfilesController.updateProfileInfo')
   Route.put('/profile/image', 'user/ProfilesController.updateProfilePic')
+  Route.get('/search/messenger', 'SearchesController.searchWithUserID')
 
   Route.resource('/comment', 'CommentsController').apiOnly().except(['show'])
   Route.resource('/post', 'PostsController').apiOnly().except(['index', 'show'])

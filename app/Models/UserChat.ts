@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 
 export default class UserChat extends BaseModel {
@@ -26,4 +26,10 @@ export default class UserChat extends BaseModel {
     localKey: 'messenger_id', // user_id column on "Post" model
   })
   public messengers: HasMany<typeof User>
+
+  @belongsTo(() => User, {
+    foreignKey: 'id',
+    localKey: 'user_id',
+  })
+  public user: BelongsTo<typeof User>
 }

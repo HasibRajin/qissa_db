@@ -9,6 +9,7 @@ export default class PostsController {
       const likerId = request.qs().liker_id
       if (likerId) {
         const post = await Post.query()
+          .whereNot({ user_id: likerId })
           .preload('user')
           .preload('reactions', (reactionQuery) => {
             reactionQuery.where('user_id', likerId)

@@ -4,6 +4,7 @@ import Post from 'App/Models/Post'
 import User from 'App/Models/User'
 import Topic from 'App/Models/Topic'
 import Question from 'App/Models/Question'
+import UserChat from 'App/Models/UserChat'
 
 export default class SearchesController {
   public async index({ request, response }: HttpContextContract) {
@@ -39,15 +40,31 @@ export default class SearchesController {
       return response.withError(e.message)
     }
   }
-  public async searchWithUser({ request, response }: HttpContextContract) {
+  public async searchUser({ request, response }: HttpContextContract) {
     try {
       const requestData = request.qs().request_data
 
       const user = await User.query()
-        .where('name', 'like', `%${requestData}%`)
-        .orWhere('email', 'like', `%${requestData}%`)
+        .where('name', 'Ilike', `%${requestData}%`)
+        .paginate(request.qs().page)
 
       return response.withSuccess(` found user`, user)
+    } catch (e) {
+      return response.withError(e.message)
+    }
+  }
+  public async searchWithUserID({ auth, request, response }: HttpContextContract) {
+    try {
+      const requestData = request.qs().request_data
+
+      const user = await UserChat.query()
+        .where({ user_id: auth.user?.id })
+        .preload('messengers', (messengerQuery) => {
+          messengerQuery.where('name', 'Ilike', `%${requestData}%`)
+        })
+        .paginate(request.qs().page)
+
+      return response.withSuccess(` found data`, user)
     } catch (e) {
       return response.withError(e.message)
     }
