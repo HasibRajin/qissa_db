@@ -42,13 +42,14 @@ export default class UserChatsController {
     }
   }
 
-  public async update({ params: { id }, response, auth }: HttpContextContract) {
+  public async update({ params: { id }, request, response, auth }: HttpContextContract) {
     try {
-      const userChat = await UserChat.query()
-        .where({ user_id: auth.user?.id })
-        .andWhere({ messenger_id: id })
-        .first()
-      userChat?.merge({ is_block: true })
+      const data = request.only(['is_block', 'chat_at'])
+      const userChat = await UserChat.findOrFail(id)
+      if (userChat.user_id !== auth.user?.id) {
+        throw new Error('user id mismatch')
+      }
+      userChat?.merge(data)
       await userChat?.save()
       return response.withSuccess('update success')
     } catch (e) {

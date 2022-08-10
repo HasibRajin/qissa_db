@@ -23,6 +23,7 @@ export default class UserChats extends BaseSchema {
         .notNullable()
       table.unique(['user_id', 'messenger_id'])
       table.boolean('is_block').defaultTo(false)
+      table.timestamp('chat_at', { useTz: true }).nullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
