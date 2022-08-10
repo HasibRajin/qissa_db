@@ -2,6 +2,7 @@
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import UserChat from 'App/Models/UserChat'
+import { DateTime } from 'luxon'
 
 export default class UserChatsController {
   public async index({ request, response, auth }: HttpContextContract) {
@@ -27,6 +28,8 @@ export default class UserChatsController {
   public async store({ request, response, auth }: HttpContextContract) {
     try {
       const data = request.only(['messenger_id'])
+      const now = DateTime.now()
+
       await UserChat.updateOrCreate(
         {
           user_id: auth.user?.id,
@@ -34,6 +37,7 @@ export default class UserChatsController {
         },
         {
           is_block: false,
+          chat_at: now,
         }
       )
       return response.withSuccess('chat successfully')

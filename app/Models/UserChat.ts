@@ -16,7 +16,7 @@ export default class UserChat extends BaseModel {
   public is_block: boolean
 
   @column.dateTime()
-  public chatAt: DateTime
+  public chat_at: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
