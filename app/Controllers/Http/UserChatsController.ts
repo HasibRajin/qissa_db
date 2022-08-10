@@ -4,9 +4,10 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import UserChat from 'App/Models/UserChat'
 
 export default class UserChatsController {
-  public async index({ request, response }: HttpContextContract) {
+  public async index({ request, response, auth }: HttpContextContract) {
     try {
       const messengerData = await UserChat.query()
+        .where({ user_id: auth.user?.id })
         .preload('messengers')
         .where({ is_block: false })
         .orderBy([
