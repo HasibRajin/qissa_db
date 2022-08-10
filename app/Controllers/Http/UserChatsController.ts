@@ -12,7 +12,7 @@ export default class UserChatsController {
         .where({ is_block: false })
         .orderBy([
           {
-            column: 'id',
+            column: 'chat_at',
             order: 'desc',
           },
         ])
