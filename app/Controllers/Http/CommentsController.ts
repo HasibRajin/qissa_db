@@ -21,7 +21,7 @@ export default class CommentsController {
       if (e.messages) {
         return response.withError(e.messages)
       }
-      return response.withError(e.message)
+      return e.messages ? response.withError(e.messages) : response.withError(e.message)
     }
   }
 

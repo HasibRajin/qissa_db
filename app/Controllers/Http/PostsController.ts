@@ -70,7 +70,7 @@ export default class PostsController {
       if (e.messages) {
         return response.withError(e.messages)
       }
-      return response.withError(e.message)
+      return e.messages ? response.withError(e.messages) : response.withError(e.message)
     }
   }
 
@@ -122,7 +122,7 @@ export default class PostsController {
 
       return response.withSuccess(`post is updated successfully`, userPost)
     } catch (e) {
-      return response.withError(e.message)
+      return e.messages ? response.withError(e.messages) : response.withError(e.message)
     }
   }
 

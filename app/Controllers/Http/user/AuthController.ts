@@ -54,7 +54,7 @@ export default class AuthController {
       //   user,
       // })
     } catch (e) {
-      return response.withError(e.message)
+      return e.messages ? response.withError(e.messages) : response.withError(e.message)
     }
   }
 
@@ -72,7 +72,7 @@ export default class AuthController {
       //   user: user,
       // })
     } catch (e) {
-      return response.withError(e.message)
+      return e.messages ? response.withError(e.messages) : response.withError(e.message)
     }
   }
 
